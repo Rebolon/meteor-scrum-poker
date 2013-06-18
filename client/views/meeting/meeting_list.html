@@ -1,7 +1,7 @@
 <template name="meetingList">
-	<ul>
-	{{#each list}}
-		<li>{{title}}</li>	
+	<ul>{{meetings.count}}
+	{{#each meetings}}
+		{{> meetingItem}}
 	{{/each}}
 	</ul>
 </template>

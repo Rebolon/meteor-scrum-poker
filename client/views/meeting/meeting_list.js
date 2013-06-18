@@ -1,5 +1,6 @@
 Template.meetingList.helpers({
-	list: function () {
-		return Meeting.find({ownerId: Meteor.userId});
+	meetings: function () {
+		var meeting = Meeting.find({ownerId: Meteor.userId()}, {sort: {submitted: -1}});
+		return meeting;
 	}
 });

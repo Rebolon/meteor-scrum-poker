@@ -3,10 +3,18 @@ Meteor.Router.add({
 
 	'/meeting/:_id': {
 		to: 'meetingPage',
-		and: function(id) { Session.set('currentMeetingId', id); }
+		and: function(id) { Session.set('selectedMeeting', id); }
+	},
+	
+	'/submit': {
+		to: 'meetingSubmit',
+		and: function() { Session.set('selectedMeeting', null); }
 	},
 
-	'/submit': 'meetingSubmit'
+	'/edit/:_id': {
+		to: 'meetingSubmit',
+		and: function(id) { Session.set('selectedMeeting', id); }
+	}
 });
 
 Meteor.Router.filters({
@@ -19,4 +27,5 @@ Meteor.Router.filters({
 		return 'accessDenied';
 	}
 });
+
 Meteor.Router.filter('requireLogin', {only: 'meetingSubmit'});

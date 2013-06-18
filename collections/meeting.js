@@ -1,5 +1,6 @@
-Members = Meteor.Collection('members');
-Meeting = Meteor.Collection('meeting');
+Emails = new Meteor.Collection('emails');
+Members = new Meteor.Collection('members');
+Meeting = new Meteor.Collection('meeting');
 
 var checkDbRights = function funcCheckRights (userId, ownerId) {
 	return userId === ownerId;
@@ -10,7 +11,7 @@ var DbAuthorization = {
                 return checkDbRights(userId, doc.ownerId);
         },
 
-        delete: function funcDelMember(userId, doc) {
+        remove: function funcDelMember(userId, doc) {
                 return checkDbRights(userId, doc.ownerId);
         },
 
@@ -23,9 +24,9 @@ Members.allow(DbAuthorization);
 Meeting.allow(DbAuthorization);
 
 Meteor.methods({
-	post: function(meetingAttributes) {
+	createMeeting: function(meetingAttributes) {
 		var user = Meteor.user(),
-		meetingWithSameLink = Meeting.findOne({title: meetingAttributes.title});
+		meetingWithSameSubject = Meeting.findOne({title: meetingAttributes.title});
 		// ensure the user is logged in
 		if (!user)
 			throw new Meteor.Error(401, "You need to login to create a new meeting");
@@ -33,21 +34,23 @@ Meteor.methods({
 		if (!meetingAttributes.title)
 			throw new Meteor.Error(422, 'Please fill in a headline');
 		// check that there are no previous meeing with the same title
-		if (meetingAttributes.url && meetingWithSameLink) {
+		if (meetingAttributes.title && meetingWithSameSubject) {
 			throw new Meteor.Error(302,
 				'This meeting has already been posted',
-				meetingWithSameLink._id);
+				meetingWithSameSubject._id);
 		}
 
-		// pick out the whitelisted keys
-		var meeting = _.extend(_.pick(meetingAttributes, 'url'), {
-			title: meetingAttributes.title + (this.isSimulation ? '(client)' : '(server)'),
-			ownerId: user._id,
-			author: user.username,
-			submitted: new Date().getTime()
-		});
+		var meeting = {
+			title: meetingAttributes.title + (this.isSimulation ? ' *' : ''),
+			ownerId: user._id
+		};
 
-		var meetingId = Meeting.insert(meeting);
+		if (meetingAttributes._id) {
+			var meetingId = Meeting.update({_id: meetingAttributes._id}, {$set: meeting});
+		} else {
+			meeting.submitted = new Date().getTime();
+			var meetingId = Meeting.insert(meeting);
+		}
 		return meetingId;
 	}
 });
