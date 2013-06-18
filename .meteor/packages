@@ -9,9 +9,9 @@ preserve-inputs
 router
 roles
 spin
-bootstrap
 accounts-base
-accounts-ui
 email
 jquery
 accounts-password
+accounts-ui-bootstrap-dropdown
+bootstrap

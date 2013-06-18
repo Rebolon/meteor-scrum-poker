@@ -1,5 +1,7 @@
 <template name="meetingList">
-	<ul>{{meetings.count}}
+	<ul>{{#unless meetings.count}}
+		Aucune r&eacute;union
+	{{/unless}}
 	{{#each meetings}}
 		{{> meetingItem}}
 	{{/each}}
