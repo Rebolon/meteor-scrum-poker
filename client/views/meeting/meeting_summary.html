@@ -1,0 +1,22 @@
+<template name="summary">
+    {{#with meeting}}
+	{{title}} ({{submitted}})
+	<ul>
+	{{#each members}}
+		<li>{{email}} {{#unless}}inconnue{{/unless}} (daily cost: {{salary}})</li>
+	{{/each}}
+	</ul>
+	{{#if endTime}}
+		d&eacute;marrage de la r&eacute;union: {{startTime}}<br />
+	        fin de la r&eacute;union: {{endTime}}<br />
+		dur&eacute;e: {{getDuration}}<br />
+		cout: {{getCostTime}}<br />
+	{{else}}
+		{{#if startTime}}
+			R&eacute;union en cours<br />
+		{{else}}
+			R&eacute;union non d&eacute;marr&eacute;e<br />
+		{{/if}}
+	{{/if}}
+    {{/with}}
+</template>

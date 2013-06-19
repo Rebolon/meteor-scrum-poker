@@ -45,6 +45,11 @@ Meteor.methods({
 			ownerId: user._id
 		};
 
+		// MaJ du champ cote client
+		if (this.isSimulation) {
+			document.querySelector('#title').value = meeting.title;
+		}
+
 		if (meetingAttributes._id) {
 			var meetingId = Meeting.update({_id: meetingAttributes._id}, {$set: meeting});
 		} else {
@@ -67,14 +72,14 @@ Meteor.methods({
 			throw new Meteor.Error(422, 'Please fill at least salary');
 		// j'aime pas trop le fait que chec envoi une exception qu'on ne maitrise pas... du coup faut utiliser try/catch
 		try {
-			check(memberAttributes.salary, Number);
+			check(parseInt(memberAttributes.salary), Number);
 		} catch (e) {
 			throw new Meteor.Error(422, 'Salary must be a number');
 		}
 
                 var member = {
                         email: memberAttributes.email + (this.isSimulation ? ' (new)' : ''),
-                        salary: memberAttributes.salary
+                        salary: parseInt(memberAttributes.salary)
                 };
 
                 var meetingId = Meeting.update({_id: meeting._id}, {$push: {members: member}});
