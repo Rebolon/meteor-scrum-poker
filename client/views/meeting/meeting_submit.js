@@ -1,13 +1,9 @@
 Template.meetingSubmit.helpers({
-	list: function funcGetMemberListOfMeeting() {
-		return Members.find({meeting: Session.get('selectedMeeting')});
-	},
-
-	selected: function() {
+	selected: function funcMeetingIsNewOrEdit() {
 		var selected = Session.get('selectedMeeting');
 		if (selected) {
 			return Meeting.findOne(selected);
 		}
-		return null
+		return null;
 	}
 });

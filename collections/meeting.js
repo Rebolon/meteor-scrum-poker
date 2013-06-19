@@ -52,5 +52,32 @@ Meteor.methods({
 			var meetingId = Meeting.insert(meeting);
 		}
 		return meetingId;
+	},
+
+	addMember: function(meetingId, memberAttributes) {
+		var user = Meteor.user(),
+                meeting = Meeting.findOne({_id: meetingId});
+                // ensure the user is logged in
+                if (!user)
+                        throw new Meteor.Error(401, "You need to login to create a new meeting");
+                // ensure member constraint
+                if (!meeting)
+                        throw new Meteor.Error(422, 'Please create a meeting first');
+		if (!memberAttributes.salary)
+			throw new Meteor.Error(422, 'Please fill at least salary');
+		// j'aime pas trop le fait que chec envoi une exception qu'on ne maitrise pas... du coup faut utiliser try/catch
+		try {
+			check(memberAttributes.salary, Number);
+		} catch (e) {
+			throw new Meteor.Error(422, 'Salary must be a number');
+		}
+
+                var member = {
+                        email: memberAttributes.email + (this.isSimulation ? ' (new)' : ''),
+                        salary: memberAttributes.salary
+                };
+
+                var meetingId = Meeting.update({_id: meeting._id}, {$push: {members: member}});
+                return meetingId;
 	}
 });
