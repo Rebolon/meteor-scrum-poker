@@ -43,6 +43,8 @@ Template.meetingSubmit.events({
 
                         Session.set('selectedMeeting', id);
                         alertBox('success', 'Une r&eacute;union a bien &eacute;t&eacute; cr&eacute;&eacute.');
+
+			Meteor.Router.to('/edit/' + id);
                 });
         },
 
