@@ -23,7 +23,7 @@ Meteor.Router.add({
 
 	'/summary/:_id': {
 		to: 'summary',
-		and: function(id) { console.log('summary: ', id); Session.set('selectedMeeting', id); }
+		and: function(id) { Session.set('selectedMeeting', id); }
 	}
 });
 

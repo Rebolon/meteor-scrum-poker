@@ -1,6 +1,40 @@
 var intervals = {
 	cost: null,
 	time: null
+    },
+
+    initCounters = function (meeting) {
+           var  meetingLib = (new MeetingTimeCost.Meeting),
+		durationLib = new MeetingTimeCost.Duration,
+		costBySeconds = meetingLib.getCostBySeconds(meeting),
+		// j'aime pas passer par un timeout pour initialiser les boutons... comment faire mieux ?
+	        domTimeCounter,
+	        domCostCounter;
+
+           setTimeout(function funcDisplayCounters() {
+		var duration = durationLib.getDuration(meeting);
+		domTimeCounter = $('#timeCounter');
+		domCostCounter = $("#costCounter");
+
+                domTimeCounter.counter({initial: duration.getHours()+":"+duration.getMinutes()+":"+duration.getSeconds()});
+                //domCostCounter.counter();
+           	domCostCounter.flipCounter({number: costBySeconds, imagePath:"/img/flipCounter-medium.png"});
+           }, 1000);
+
+           intervals.cost = setInterval(function () {
+               var newCost = domCostCounter.flipCounter("getNumber") + costBySeconds;
+               domCostCounter.flipCounter("setNumber", newCost);
+           }, 1000);
+    };
+
+Template.startStop.created = function () {
+	var id = Session.get('selectedMeeting'),
+            meeting = Meeting.findOne(id);
+
+	if (meeting 
+			&& meeting.startTime) {
+		initCounters(meeting);
+	}
 };
 
 Template.startStop.helpers({
@@ -29,20 +63,8 @@ Template.startStop.events({
                         // peut etre passer par le serveur, mais pour faire vite on garde ca pour l'instant
                         Meeting.update({_id: id}, {$set: {startTime: new Date()}});
                         document.querySelector('#btnStartMeeting').disabled = "disabled";
-
-			setTimeout(function funcDisplayCounters() {
-				$('#timeCounter').counter();
-				//$('#costCounter').counter();
-				$("#costCounter").flipCounter({number: 0, imagePath:"/img/flipCounter-medium.png"});
-			}, 1000);
-
-			costBySeconds = (new MeetingTimeCost.Meeting).getCostBySeconds(meeting);
-			intervals.cost = setInterval(function () {
-				var dom = $("#costCounter"),
-				    newCost = dom.flipCounter("getNumber") + costBySeconds;
-console.log('newCost: ', newCost);
-				dom.flipCounter("setNumber", newCost);
-			}, 1000);
+			
+			initCounters(meeting);
                 }
         },
 

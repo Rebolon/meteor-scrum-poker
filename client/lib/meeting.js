@@ -14,12 +14,14 @@ MeetingTimeCost.Duration.prototype.initDuration = function () {
 };
 
 MeetingTimeCost.Duration.prototype.getDuration = function (meeting) {
-        var duration = this.initDuration();
+        var duration = this.initDuration(),
+	    current = new Date(),
+	    start = (meeting.startTime ? meeting.startTime : current),
+	    end = (meeting.endTime ? meeting.endTime : current);
 
         if (meeting
-                        && meeting.startTime
-                        && meeting.endTime) {
-                duration.setMilliseconds(meeting.endTime - meeting.startTime);
+                        && meeting.startTime) {
+                duration.setMilliseconds(end - start);
                 return duration;
         }
 };
@@ -28,13 +30,15 @@ MeetingTimeCost.Meeting = function() {};
 
 MeetingTimeCost.Meeting.prototype.getCost = function (meeting) {
 	var costBySeconds = this.getCostBySeconds(meeting),
-	    cost = 0;
+	    cost = 0,
+	    start = meeting.startTime,
+	    end = (meeting.endTime ? meeting.endTime : new date());
 	
         if (costBySeconds 
 			&& costBySeconds > 0) {
-                cost = costBySeconds / ((meeting.endTime - meeting.startTime)*1000);
+                cost = costBySeconds / ((end - start)*1000);
         }
-
+console.log('currentCost: ', cost);
 	return cost;
 }
 
@@ -42,7 +46,9 @@ MeetingTimeCost.Meeting.prototype.getCostBySeconds = function (meeting) {
 	var dailyCost = 0,
             costBySeconds = 0;
 
-        if (meeting.members.length > 0) {
+        if (meeting
+			&& meeting.members
+			&& meeting.members.length > 0) {
                 meeting.members.forEach(function(item) {
                         dailyCost += item.salary;
                 });
