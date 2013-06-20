@@ -3,14 +3,15 @@
 	{{title}} ({{submitted}})
 	<ul>
 	{{#each members}}
-		<li>{{email}} {{#unless}}inconnue{{/unless}} (daily cost: {{salary}})</li>
+		<li>{{email}} {{#unless email}}inconnue{{/unless}} (daily cost: {{salary}})</li>
 	{{/each}}
 	</ul>
 	{{#if endTime}}
-		d&eacute;marrage de la r&eacute;union: {{startTime}}<br />
-	        fin de la r&eacute;union: {{endTime}}<br />
+	# de participants: {{members.length}}<br />
+		d&eacute;marrage de la r&eacute;union: {{displayDate startTime}}<br />
+	        fin de la r&eacute;union: {{displayDate endTime}}<br />
 		dur&eacute;e: {{getDuration}}<br />
-		cout: {{getCostTime}}<br />
+		cout: {{getCost}}<br />
 	{{else}}
 		{{#if startTime}}
 			R&eacute;union en cours<br />
@@ -19,4 +20,8 @@
 		{{/if}}
 	{{/if}}
     {{/with}}
+
+    {{#unless meeting}}
+	Il semble qu'aucune r&eacute;union soit s&eacute;lectionn&eacute;e
+    {{/unless}}
 </template>

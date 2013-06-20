@@ -23,7 +23,7 @@ Meteor.Router.add({
 
 	'/summary/:_id': {
 		to: 'summary',
-		and: function(id) { Session.set('selectedMeeting', id); }
+		and: function(id) { console.log('summary: ', id); Session.set('selectedMeeting', id); }
 	}
 });
 
@@ -40,14 +40,12 @@ Meteor.Router.filters({
 	'ownerRedirectedToStartStop': function(page) {
 		if (Meteor.user()) {
 			var meeting = Meeting.findOne(Session.get('selectedMeeting'));
-
 			if (meeting
 				&& meeting.ownerId === Meteor.userId()
 				&& !meeting.endTime) {
 				return 'startStop';
 			}
 		}
-
 		return 'summary';
 	}
 });
