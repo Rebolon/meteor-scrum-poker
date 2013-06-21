@@ -9,33 +9,33 @@ var intervals = {
 		costBySeconds = meetingLib.getCostBySeconds(meeting),
 		// j'aime pas passer par un timeout pour initialiser les boutons... comment faire mieux ?
 	        domTimeCounter,
-	        domCostCounter;
+	        domCostCounter,
+		duration = durationLib.getDuration(meeting),
+		initialTimer;
 
-           setTimeout(function funcDisplayCounters() {
-		var duration = durationLib.getDuration(meeting);
-		domTimeCounter = $('#timeCounter');
+	   if (duration) {
+		initialTimer = duration.getHours()+":"+duration.getMinutes()+":"+duration.getSeconds();
+
+ 	        domTimeCounter = $('#timeCounter');
 		domCostCounter = $("#costCounter");
+ 	        domTimeCounter.counter({initial: initialTimer});
+         	domCostCounter.flipCounter({number: costBySeconds, imagePath:"/img/flipCounter-medium.png"});
 
-                domTimeCounter.counter({initial: duration.getHours()+":"+duration.getMinutes()+":"+duration.getSeconds()});
-                //domCostCounter.counter();
-           	domCostCounter.flipCounter({number: costBySeconds, imagePath:"/img/flipCounter-medium.png"});
-           }, 1000);
-
-           intervals.cost = setInterval(function () {
-               var newCost = domCostCounter.flipCounter("getNumber") + costBySeconds;
-               domCostCounter.flipCounter("setNumber", newCost);
-           }, 1000);
+     	        intervals.cost = setInterval(function () {
+          	     var newCost = domCostCounter.flipCounter("getNumber") + costBySeconds;
+          	     domCostCounter.flipCounter("setNumber", newCost);
+          	}, 1000);
+	  }
     };
 
-Template.startStop.created = function () {
+Template.startStop.rendered = function () {
 	var id = Session.get('selectedMeeting'),
             meeting = Meeting.findOne(id);
 
-	if (meeting 
-			&& meeting.startTime) {
+	if (!intervals.cost) {
 		initCounters(meeting);
 	}
-};
+}
 
 Template.startStop.helpers({
 	meeting: function () {
