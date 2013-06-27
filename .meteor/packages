@@ -6,12 +6,8 @@
 autopublish
 insecure
 preserve-inputs
-router
-roles
-spin
 accounts-base
-email
-jquery
 accounts-password
-bootstrap
 accounts-ui
+bootstrap
+madewith
