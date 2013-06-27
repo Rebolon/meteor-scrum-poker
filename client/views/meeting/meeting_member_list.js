@@ -9,4 +9,21 @@ Template.memberList.helpers({
 
                 return members;
         },
+
+	selectedMeeting: function () {
+		var selectedMeeting = Session.get('selectedMeeting');
+                if (selectedMeeting) {
+			return true;
+                }
+		return false;
+	}
+});
+
+Template.memberList.events({
+	'click #btnGotoSummary': function funcGotoSummary() {
+		var selectedMeeting = Session.get('selectedMeeting');
+		if (selectedMeeting) {
+			Meteor.Router.to('/summary/' + selectedMeeting);
+		}
+	}
 });

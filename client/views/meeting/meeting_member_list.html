@@ -4,4 +4,12 @@
 		{{> memberItem}}
 	{{/each}}
 	</ul>
+	
+	{{#if selectedMeeting}}
+        <button id="btnGotoSummary">Continue</button>
+	{{/if}}
+
+	{{#unless selectedMeeting}}
+	Crete the meeting to continue.
+	{{/unless}}
 </template>

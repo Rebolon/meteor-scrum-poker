@@ -13,5 +13,5 @@ accounts-base
 email
 jquery
 accounts-password
-accounts-ui-bootstrap-dropdown
 bootstrap
+accounts-ui

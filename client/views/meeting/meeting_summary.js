@@ -13,18 +13,23 @@ Template.summary.helpers({
 	getDuration: function() {
 		var id = Session.get('selectedMeeting'),
 		    meeting = Meeting.findOne(id),
-		    duration = (new MeetingTimeCost.Duration).getDuration(meeting);
+		    duration = (new MeetingTimeCost.Duration).getDuration(meeting),
+		    hours, minutes, seconds;
 
 		if (duration) {
-			return duration.getHours() + ':' + duration.getMinutes() + ':' + duration.getSeconds();
+			hours = duration.getHours().toString();
+			minutes = duration.getMinutes().toString();
+			seconds = duration.getSeconds().toString();
+			return (hours.length === 2?'':'0') + hours + ':' + (minutes.length === 2?'':'0') + minutes + ':' + (seconds.length === 2?'':'0') + seconds;
 		}
 	},
 
 	getCost: function() {
 		var id = Session.get('selectedMeeting'),
                     meeting = Meeting.findOne(id),
-		    cost = (new MeetingTimeCost.Meeting).getCost(meeting);
+		    cost = (new MeetingTimeCost.Meeting).getCost(meeting),
+		    intVal = parseInt(cost);
 
-		return cost.toPrecision(1);
+		return (!isNaN(intVal) ? intVal : 0) ;
 	}
 });

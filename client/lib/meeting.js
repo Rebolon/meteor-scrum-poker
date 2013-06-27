@@ -32,11 +32,11 @@ MeetingTimeCost.Meeting.prototype.getCost = function (meeting) {
 	var costBySeconds = this.getCostBySeconds(meeting),
 	    cost = 0,
 	    start = meeting.startTime,
-	    end = (meeting.endTime ? meeting.endTime : new date());
+	    end = (meeting.endTime ? meeting.endTime : new Date());
 	
         if (costBySeconds 
 			&& costBySeconds > 0) {
-                cost = costBySeconds / ((end - start)*1000);
+                cost = costBySeconds / ((end - start)/1000);
         }
 console.log('currentCost: ', cost);
 	return cost;

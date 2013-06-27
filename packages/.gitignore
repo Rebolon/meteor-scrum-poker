@@ -2,3 +2,6 @@ router
 page-js-ie-support
 roles
 spin
+bootstrap-3
+accounts-ui-bootstrap-3
+accounts-ui-bootstrap-dropdown
