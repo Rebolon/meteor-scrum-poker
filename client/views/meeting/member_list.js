@@ -23,7 +23,7 @@ Template.memberList.events({
 	'click #btnGotoSummary': function funcGotoSummary() {
 		var selectedMeeting = Session.get('selectedMeeting');
 		if (selectedMeeting) {
-			Meteor.Router.to('/summary/' + selectedMeeting);
+			Meteor.Router.to('/meeting/summary/' + selectedMeeting);
 		}
 	}
 });

@@ -1,4 +1,4 @@
-var startTime = new Date(),
+/*var startTime = new Date(),
     meeting = {
 	_id: "fake_id",
 	members: [
@@ -14,4 +14,4 @@ var startTime = new Date(),
 var dur = new MeetingTimeCost.Duration;
 var met = new MeetingTimeCost.Meeting;
 
-
+*/

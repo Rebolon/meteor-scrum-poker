@@ -4,10 +4,14 @@
 </head>
 
 <body>
-	<div class="container">
-		{{> header}}
+	<div id="wrap">
+	    {{> header}}
+	    <div class="container">
 		<div id="main" class="row-fluid">
 			{{renderPage}}
 		</div>
+	    </div>
+
 	</div>
+	{{> footer}}
 </body>

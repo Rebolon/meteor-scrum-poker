@@ -81,7 +81,7 @@ Template.meetingStartStop.events({
 			clearInterval(intervals.cost);
 			clearInterval(intervals.time);
 
-                        Meteor.Router.to('/meetingSummary/' + meeting._id);
+                        Meteor.Router.to('/meeting/summary/' + meeting._id);
                 }
         }
 });
