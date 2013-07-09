@@ -1,6 +1,6 @@
 Meteor.Router.add({
 	// to dashboard with meetingList and SprintList
-	'/': 'meetingList',
+	'/': 'dashboard',
 
 	/**
 	 * Meeting tools
@@ -28,7 +28,7 @@ Meteor.Router.add({
 	'/meeting/summary/:_id': {
 		to: 'meetingSummary',
 		and: function(id) { Session.set('selectedMeeting', id); }
-	}//,
+	},
 
 	/**
 	 * Sprint mood tools
@@ -51,8 +51,7 @@ Meteor.Router.add({
 	'/sprint/summary/:_id': {
                 to: 'sprintSummary',
                 and: function(id) { Session.set('selectedSprint', id); }
-        },
-*/
+        }
 });
 
 Meteor.Router.filters({
@@ -80,7 +79,7 @@ Meteor.Router.filters({
 
 	'noMorePossibleToEdit': function(page) {
 		var pageName = page;
-		switch (substr(page, 0, 6) {
+		switch (page.substr(0, 6)) {
 			case 'sprint':
 				var sprint = Sprint.findOne(Session.get('selectedSprint'));
                                 if (sprint
