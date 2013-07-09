@@ -1,6 +1,7 @@
 <template name="header">
-	<header class="navbar">
+	<div class="navbar navbar-fixed-top">
 	        <div class="navbar-inner">
+		    <div class="container">
 	        	<a class="brand" href="{{meetingListPath}}">Meeting Time Cost</a>
 			<ul class="nav">
 				{{#if currentUser}}
@@ -11,6 +12,7 @@
 			<ul class="nav pull-right span3">
 				{{loginButtons}}
 			</ul>
+		    </div>
 		</div>
-	</header>
+	</div>
 </template>

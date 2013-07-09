@@ -3,8 +3,7 @@
   "dependencies": {
     "basePackages": {
       "router": {},
-      "spin": {},
-      "observatory": {}
+      "spin": {}
     },
     "packages": {
       "router": {
@@ -17,20 +16,10 @@
         "tag": "v0.2.0",
         "commit": "fd3a2871a69442848b4b4e74f5e1ae28fa4a95a4"
       },
-      "observatory": {
-        "git": "https://github.com/jhoxray/observatory.git",
-        "tag": "v0.2.1",
-        "commit": "3a3302c086fc9e9c59adf9dfc01e88d746f6c501"
-      },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",
         "tag": "v1.3.5",
         "commit": "b99ed8380aefd10b2afc8f18d9eed4dd0d8ea9cb"
-      },
-      "observatory-apollo": {
-        "git": "https://github.com/superstringsoftware/observatory-apollo.git",
-        "branch": "master",
-        "commit": "b754bb265ef3df07a406f2b342a169e951e6caee"
       }
     }
   }
