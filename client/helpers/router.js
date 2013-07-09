@@ -51,7 +51,17 @@ Meteor.Router.add({
 	'/sprint/summary/:_id': {
                 to: 'sprintSummary',
                 and: function(id) { Session.set('selectedSprint', id); }
-        }
+        },
+
+	'/poker': {
+		to: 'pokerRoom',
+		and: function funcCreateRoomAndWait() {
+			var pokerStream = new Meteor.Stream('poker');
+			pokerStream.on('vote', function (message) {
+console.log('message: ', message);
+			});
+		}
+	}
 });
 
 Meteor.Router.filters({
