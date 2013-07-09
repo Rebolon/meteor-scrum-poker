@@ -1,0 +1,25 @@
+<template name="sprintSubmit">
+	<div class="row-fluid">
+	<div class="span4">
+		<div class="control-group input-append">
+		<input type="text" id="title" placeholder="Meeting Subject" value="{{selected.title}}" />
+
+		{{#if selected}}
+		<input type="button" id="btnEditSprint" class="btn" value="Modifier" />
+		{{else}}
+		<input type="button" id="btnAddSprint" class="btn" value="Creer" />
+		{{/if}}
+		</div>
+	</div>
+
+	<div class="span4">
+		<div class="control-group input-append">
+		<input type="text" id="email" class="input-small" placeholder="Email" /> <input type="button" id="btnAddMember" class="btn" value="Ajouter" />
+		</div>
+	</div>
+
+	<div class="span4">
+		{{> sprintMemberList}}
+	</div>
+	</div>
+</template>

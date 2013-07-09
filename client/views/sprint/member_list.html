@@ -1,0 +1,15 @@
+<template name="nikonikoMemberList">
+	<ul>
+	{{#each member}}
+		{{> memberItem}}
+	{{/each}}
+	</ul>
+	
+	{{#if selectedSprint}}
+        <button id="btnGotoSummary">Start</button>
+	{{/if}}
+
+	{{#unless selectedSprint}}
+	Create the sprint to continue.
+	{{/unless}}
+</template>

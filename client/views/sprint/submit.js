@@ -13,7 +13,7 @@ var alertBox = function (type, content) {
         existingEl.innerHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button> \
                 <h4>' + alertType + '</h4> ' + content;
 
-        document.querySelector('#meetingUserMessage').appendChild(existingEl);
+        document.querySelector('#sprintUserMessage').appendChild(existingEl);
 
         Meteor.setTimeout(function() {
                 $('#alert').alert('close');
@@ -21,63 +21,61 @@ var alertBox = function (type, content) {
         return true;
 }
 
-Template.meetingSubmit.helpers({
-	selected: function funcMeetingIsNewOrEdit() {
-		var selected = Session.get('selectedMeeting');
+Template.sprintSubmit.helpers({
+	selected: function funcSprintIsNewOrEdit() {
+		var selected = Session.get('selectedSprint');
 		if (selected) {
-			return Meeting.findOne(selected);
+			return Sprint.findOne(selected);
 		}
 		return null;
 	}
 });
 
-Template.meetingSubmit.events({
-        'click #btnAddMeeting': function() {
-                var meeting = {
+Template.sprintSubmit.events({
+        'click #btnAddSprint': function() {
+                var sprint = {
                         title: document.querySelector('#title').value
                 };
 
-                Meteor.call('createMeeting', meeting, function(error, id) {
+                Meteor.call('createSprint', sprint, function(error, id) {
                         if (error)
                                 return alertBox('error', error.reason);
 
-                        Session.set('selectedMeeting', id);
-                        alertBox('success', 'Une r&eacute;union a bien &eacute;t&eacute; cr&eacute;&eacute.');
+                        Session.set('selectedSprint', id);
+                        alertBox('success', 'Un sprint a bien &eacute;t&eacute; cr&eacute;&eacute;e.');
 
-			Meteor.Router.to('/meeting/edit/' + id);
+			Meteor.Router.to('/sprint/edit/' + id);
                 });
         },
 
         'click #btnAddMember': function () {
                 var member = {
-                        email: document.querySelector('#email').value,
-                        salary: document.querySelector('#salary').value
+                        email: document.querySelector('#email').value
                 };
 
-                Meteor.call('addMemberToMeeting', Session.get('selectedMeeting'), member, function(error, id) {
+                Meteor.call('addMemberToSprint', Session.get('selectedSprint'), member, function(error, id) {
                         if (error)
                                 return alertBox('error', error.reason);
 
                         document.querySelector('#email').value = '';
-                        document.querySelector('#salary').value = '';
                 });
         },
 
-        'click #btnEditMeeting': function () {
-                var meeting = {
+        'click #btnEditSprint': function () {
+                var sprint = {
                         title: document.querySelector('#title').value
-                };
+                }, selectedSprint = Session.get('selectedSprint');
 
-                if (Session.get('selectedMeeting')) {
-                        meeting._id = Session.get('selectedMeeting');
+                if (selectedSprint) {
+                        sprint._id = selectedSprint;
                 }
 
-                if (meeting.title !== Meeting.findOne(Session.get('selectedMeeting')).title) {
-                        Meteor.call('createMeeting', meeting, function(error, id) {
+                if (sprint.title !== Sprint.findOne(selectedSprint).title) {
+                        Meteor.call('createSprint', sprint, function(error, id) {
                                 if (error)
                                         return alertBox('error', error.reason);
 
-                                alertBox('success', 'R&eacute;union mise &acute; jour');
+                                alertBox('success', 'Sprint mis &acute; jour');
                         });
                 };
         }
