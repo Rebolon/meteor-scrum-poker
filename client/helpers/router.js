@@ -1,30 +1,58 @@
 Meteor.Router.add({
+	// to dashboard with meetingList and SprintList
 	'/': 'meetingList',
 
-	'/meeting/:_id': {
-		to: 'meetingPage',
+	/**
+	 * Meeting tools
+	 */
+/*	'/meeting/:_id': { // au fait ça sert à quoi ça ?
+		to: 'meetingItem',
 		and: function(id) { Session.set('selectedMeeting', id); }
 	},
-	
-	'/submit': {
+*/	
+	'/meeting/submit': {
 		to: 'meetingSubmit',
 		and: function() { Session.set('selectedMeeting', null); }
 	},
 
-	'/edit/:_id': {
+	'/meeting/edit/:_id': {
 		to: 'meetingSubmit',
 		and: function(id) { Session.set('selectedMeeting', id); }
 	},
 
-	'/start-stop/:_id': {
-		to: 'startStop',
+	'/meeting/start-stop/:_id': {
+		to: 'meetingStartStop',
 		and: function(id) { Session.set('selectedMeeting', id); }
 	},
 
-	'/summary/:_id': {
-		to: 'summary',
+	'/meeting/summary/:_id': {
+		to: 'meetingSummary',
 		and: function(id) { Session.set('selectedMeeting', id); }
-	}
+	}//,
+
+	/**
+	 * Sprint mood tools
+	 */
+/*	'/sprint/:_id': {
+		to: 'sprintPage',
+                and: function(id) { Session.set('selectedSprint', id); }
+	},
+
+	'/sprint/submit': {
+                to: 'sprintSubmit',
+                and: function() { Session.set('selectedSprint', null); }
+        },
+
+        '/sprint/edit/:_id': {
+                to: 'sprintMoodSubmit',
+                and: function(id) { Session.set('selectedSprint', id); }
+        },
+
+	'/sprint/summary/:_id': {
+                to: 'sprintMoodSummary',
+                and: function(id) { Session.set('selectedSprint', id); }
+        },
+*/
 });
 
 Meteor.Router.filters({
@@ -43,12 +71,24 @@ Meteor.Router.filters({
 			if (meeting
 				&& meeting.ownerId === Meteor.userId()
 				&& !meeting.endTime) {
-				return 'startStop';
+				return 'meetingStartStop';
 			}
 		}
-		return 'summary';
+
+		return 'meetingSummary';
+	},
+
+	'noMorePossibleToEdit': function(page) {
+		var meeting = Meeting.findOne(Session.get('selectedMeeting'));
+		if (meeting
+			&& meeting.startTime) {
+			return 'meetingSummary';
+		}
+
+		return page;
 	}
 });
 
-Meteor.Router.filter('requireLogin', {only: 'meetingSubmit'});
-Meteor.Router.filter('ownerRedirectedToStartStop', {only: 'summary'});
+Meteor.Router.filter('requireLogin', {only: ['meetingSubmit', 'meetingVote']}); //, 'sprintSubmit', 'sprintVote']});
+Meteor.Router.filter('ownerRedirectedToStartStop', {only: ['meetingSummary']}); //, 'sprintSummary']});
+Meteor.Router.filter('noMorePossibleToEdit', {only: ['meetingSubmit']});

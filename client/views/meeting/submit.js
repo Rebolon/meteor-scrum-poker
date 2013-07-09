@@ -13,7 +13,7 @@ var alertBox = function (type, content) {
         existingEl.innerHTML = '<button type="button" class="close" data-dismiss="alert">&times;</button> \
                 <h4>' + alertType + '</h4> ' + content;
 
-        document.querySelector('header').insertBefore(existingEl);
+        document.querySelector('#meetingUserMessage').appendChild(existingEl);
 
         Meteor.setTimeout(function() {
                 $('#alert').alert('close');
@@ -44,7 +44,7 @@ Template.meetingSubmit.events({
                         Session.set('selectedMeeting', id);
                         alertBox('success', 'Une r&eacute;union a bien &eacute;t&eacute; cr&eacute;&eacute.');
 
-			Meteor.Router.to('/edit/' + id);
+			Meteor.Router.to('/meeting/edit/' + id);
                 });
         },
 

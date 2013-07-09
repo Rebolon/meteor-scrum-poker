@@ -28,7 +28,7 @@ var intervals = {
 	  }
     };
 
-Template.startStop.rendered = function () {
+Template.meetingStartStop.rendered = function () {
 	var id = Session.get('selectedMeeting'),
             meeting = Meeting.findOne(id);
 
@@ -37,7 +37,7 @@ Template.startStop.rendered = function () {
 	}
 }
 
-Template.startStop.helpers({
+Template.meetingStartStop.helpers({
 	meeting: function () {
 		var id = Session.get('selectedMeeting'),
 		    meeting = Meeting.findOne(id);
@@ -53,7 +53,7 @@ Template.startStop.helpers({
 	}
 });
 
-Template.startStop.events({
+Template.meetingStartStop.events({
 	'click #btnStartMeeting': function () {
                 var id = Session.get('selectedMeeting'),
                     meeting = Meeting.findOne(id);
@@ -81,7 +81,7 @@ Template.startStop.events({
 			clearInterval(intervals.cost);
 			clearInterval(intervals.time);
 
-                        Meteor.Router.to('/summary/' + meeting._id);
+                        Meteor.Router.to('/meeting/summary/' + meeting._id);
                 }
         }
 });

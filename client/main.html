@@ -1,13 +1,18 @@
 <head>
 	<title>Your meeting cost a lot of money, but can you say how ?</title>
 	<link rel="stylesheet" type="text/css" href="/css/jquery.counter-analog.css" />
+	<link rel="stylesheet" type="text/css" href="/css/meetingtimecost.css" />
 </head>
 
 <body>
+	<div id="wrap">
+	{{> header}}
 	<div class="container">
-		{{> header}}
-		<div id="main" class="row-fluid">
-			{{renderPage}}
-		</div>
+	    <div id="main" class="row-fluid">
+		{{renderPage}}
+	    </div>
 	</div>
+	</div>
+
+	{{> footer}}
 </body>

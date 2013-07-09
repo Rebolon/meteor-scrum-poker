@@ -1,1 +1,15 @@
 /* CSS declarations go here */
+html, body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -60px;
+}
+
+#wrap > .container {
+    padding-top: 60px;
+}

@@ -1,13 +1,18 @@
 <template name="header">
-	<header class="navbar">
+	<div class="navbar navbar-fixed-top">
 	        <div class="navbar-inner">
+		    <div class="container">
 	        	<a class="brand" href="{{meetingListPath}}">Meeting Time Cost</a>
 			<ul class="nav">
-				{{#if currentUser}}<li><a href="{{meetingSubmitPath}}">New</a></li>{{/if}}
+				{{#if currentUser}}
+				<li><a href="{{meetingSubmitPath}}">New meeting</a></li>
+				<li><a href="{ { sprintMoodSubmitPath } }">New sprint mood</a></li>
+				{{/if}}
 			</ul>
 			<ul class="nav pull-right span3">
 				{{loginButtons}}
 			</ul>
+		    </div>
 		</div>
-	</header>
+	</div>
 </template>

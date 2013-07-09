@@ -1,4 +1,4 @@
-Template.summary.helpers({
+Template.meetingSummary.helpers({
 	meeting: function() {
 		var id = Session.get('selectedMeeting');
 		if (id) {
