@@ -1,4 +1,4 @@
-Template.memberList.helpers({
+Template.meetingMemberList.helpers({
 	member: function funcGetMemberListOfMeeting() {
                 var members = [],
 		    meeting = Meeting.findOne({_id: Session.get('selectedMeeting')});
@@ -19,7 +19,7 @@ Template.memberList.helpers({
 	}
 });
 
-Template.memberList.events({
+Template.meetingMemberList.events({
 	'click #btnGotoSummary': function funcGotoSummary() {
 		var selectedMeeting = Session.get('selectedMeeting');
 		if (selectedMeeting) {

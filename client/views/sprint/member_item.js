@@ -1,13 +1,13 @@
-Template.meetingMemberItem.events({
+Template.sprintMemberItem.events({
 	'click #btnRemoveMember': function () {
-		var meeting = Meeting.findOne({_id: Session.get('selectedMeeting')}),
+		var sprint = Sprint.findOne({_id: Session.get('selectedSprint')}),
 		    members = [],
 		    newMembers = [],
 		    memberToRemove = this,
 		    memberRemoved = false;
 
-		if (meeting) {
-			members = meeting.members;
+		if (sprint) {
+			members = sprint.members;
 			newMembers = _.filter(members, function(item) {
 				if (!memberRemoved 
 					&& item.email == memberToRemove.email 
@@ -20,7 +20,7 @@ Template.meetingMemberItem.events({
 			});
 			
 			// est ce utile de passer par le serveur pour ça ? je ne pense pas
-			Meeting.update({_id: meeting._id}, {$set: {members: newMembers}});
+			Sprint.update({_id: sprint._id}, {$set: {members: newMembers}});
 		}
 
 		
