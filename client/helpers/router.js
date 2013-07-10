@@ -56,9 +56,8 @@ Meteor.Router.add({
 	'/poker': {
 		to: 'pokerRoom',
 		and: function funcCreateRoomAndWait() {
-			var pokerStream = new Meteor.Stream('poker');
-			pokerStream.on('vote', function (message) {
-console.log('message: ', message);
+// @TODO manque la création du channel pour le user courant
+			PokerStream.on('vote', function (message) {
 			});
 		}
 	}
