@@ -5,7 +5,7 @@ Meteor.Router.add({
 	/**
 	 * Meeting tools
 	 */
-/*	'/meeting/:_id': { // au fait ça sert à quoi ça ?
+/*	'/meeting/:_id': { // au fait ca sert a quoi ca ?
 		to: 'meetingItem',
 		and: function(id) { Session.set('selectedMeeting', id); }
 	},
@@ -53,14 +53,37 @@ Meteor.Router.add({
                 and: function(id) { Session.set('selectedSprint', id); }
         },
 
-	'/poker': {
-		to: 'pokerRoom',
+  /**
+	 * Poker tools
+	 */
+  '/poker': {
+    to: 'pokerRoom',
+    and: function funcGotToRoom() {
+      var js, s;
+      
+      // load required script
+      js = document.createElement('script');
+      js.type = 'text/javascript';
+      js.async = true;
+      js.src = 'https://raw.github.com/davidshimjs/qrcodejs/master/qrcode.min.js';
+      s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(js, s); 
+      
+      // clear session
+      Session.set('roomCreated', false);
+    }
+  },
+  
+  '/poker/result': {
+    to: 'pokerResult',
 		and: function funcCreateRoomAndWait() {
-// @TODO manque la création du channel pour le user courant
-			PokerStream.on('vote', function (message) {
-			});
-		}
-	}
+      // @TODO manque la crÃ©ation du channel pour le user courant
+			/*PokerStream.on('vote', function (message) {
+			});*/
+    }
+  },
+    
+  '/poker/vote': 'pokerVote'
 });
 
 Meteor.Router.filters({

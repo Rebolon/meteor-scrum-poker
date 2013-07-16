@@ -1,4 +1,10 @@
 <template name="pokerRoom">
-<button name="btnResetVote" id="btnResetVote">Reset vote</button>
-{{>voteResult}}
+{{#if isInRoom}}
+  <button name="btnResetVote" id="btnResetVote">Reset vote</button>
+  {{>voteResult}}
+{{else}}
+  <button name="createRoom" id="btnCreateRoom">Create a room</button>
+  <div id="qrcode"></div>
+  <button name="goToResult" id="btnGoToResult" style="display:none;visibility:hidden">Continue</button>
+{{/if}}
 </template>
