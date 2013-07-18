@@ -83,7 +83,11 @@ Meteor.Router.add({
     }
   },
     
-  '/poker/vote': 'pokerVote'
+  '/poker/vote/:id': {
+    to: 'pokerVote',
+    and: function funcVote(id) {
+     Session.set('currentRoom', id); 
+    }
 });
 
 Meteor.Router.filters({
