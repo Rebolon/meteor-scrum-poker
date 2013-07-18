@@ -1,13 +1,15 @@
-Session.setDefault('roomCreated', false);
-                   
+Session.setDefault('currentRoom', false);
+
+var currentRoom = Session.get('currentRoom');
+
 Template.pokerRoom.helpers({
 	isInRoom: function funcTplRoomRoomIsInRoom() {
-		return Session.get('roomCreated');
+		return Session.get('currentRoom');
 	}
 });
 
 Template.pokerRoom.events({
-	'click #btnCreateRoom': function funcTplRoomRoomClickBtnCreateRoom() {
+  'click #btnCreateRoom': function funcTplRoomRoomClickBtnCreateRoom() {
     var toInsert = {}, 
         id, qrCode, qrCodeElement = document.querySelector('#qrcode');
     if (Meteor.UserId) {
@@ -32,6 +34,10 @@ Template.pokerRoom.events({
 	},
   
   'click #btnGoToRoom': function funcTplRoomRoomClickBtnCreateRoom() {
-    Session.set('roomCreated', id);
-	}
+    Session.set('currentRoom', id);
+	},
+  
+  'click #btnResetVote': function () {
+    PokerStream.emit(currentRoom + 'currentRoom');  
+  }
 });

@@ -70,7 +70,7 @@ Meteor.Router.add({
       s.parentNode.insertBefore(js, s); 
       
       // clear session
-      Session.set('roomCreated', false);
+      Session.set('currentRoom', false);
     }
   },
   
