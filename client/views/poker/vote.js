@@ -1,3 +1,5 @@
+console.log('client/views/poker/vote.js');
+
 var currentRoom = Session.get('currentRoom'),
     resetSelection = function () {
       document.querySelectorAll('pokerValue').forEach(function (item) {
@@ -5,10 +7,11 @@ var currentRoom = Session.get('currentRoom'),
       });
     };
 
-PokerStream.on(currentRoom + ':freezeVote', function () {
-  resetSelection();
-});
-
+if (Session.get('collectionsReady')) {
+  PokerStream.on(currentRoom + ':freezeVote', function () {
+    resetSelection();
+  });
+}
 
 Template.pokerVote.events({
   'click .btn.pokerValue': function () {

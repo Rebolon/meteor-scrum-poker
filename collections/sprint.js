@@ -1,3 +1,5 @@
+console.log('collections/sprint.js');
+
 Sprint = new Meteor.Collection('sprint');
 
 var checkDbRights = function funcCheckRights (userId, ownerId) {

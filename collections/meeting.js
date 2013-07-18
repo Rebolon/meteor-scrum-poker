@@ -1,3 +1,5 @@
+console.log('collections/meeting.js');
+
 Meeting = new Meteor.Collection('meeting');
 
 var checkDbRights = function funcCheckRights (userId, ownerId) {

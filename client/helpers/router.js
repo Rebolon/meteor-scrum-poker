@@ -57,8 +57,8 @@ Meteor.Router.add({
 	 * Poker tools
 	 */
   '/poker': {
-    to: 'pokerRoom',
-    and: function funcGotToRoom() {
+    to: 'pokerCreate',
+    and: function funcGotToCreateRoom() {
       var js, s;
       
       // load required script
@@ -67,7 +67,7 @@ Meteor.Router.add({
       js.async = true;
       js.src = 'https://raw.github.com/davidshimjs/qrcodejs/master/qrcode.min.js';
       s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(js, s); 
+      s.parentNode.insertBefore(js, s);
       
       // clear session
       Session.set('currentRoom', false);
@@ -86,8 +86,10 @@ Meteor.Router.add({
   '/poker/vote/:id': {
     to: 'pokerVote',
     and: function funcVote(id) {
+console.log('/poker/vote/:id');
      Session.set('currentRoom', id); 
     }
+  }
 });
 
 Meteor.Router.filters({

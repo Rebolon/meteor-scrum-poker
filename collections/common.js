@@ -1,3 +1,5 @@
+console.log('collections/common.js');
+
 Emails = new Meteor.Collection('emails');
 Members = new Meteor.Collection('members');
 

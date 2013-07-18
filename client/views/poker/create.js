@@ -2,15 +2,19 @@ Session.setDefault('currentRoom', false);
 
 var currentRoom = Session.get('currentRoom');
 
-Template.pokerRoom.helpers({
+Template.pokerCreate.helpers({
 	isInRoom: function funcTplRoomRoomIsInRoom() {
 		return Session.get('currentRoom');
 	}
 });
 
-Template.pokerRoom.events({
-  'click #btnCreateRoom': function funcTplRoomRoomClickBtnCreateRoom() {
-    var toInsert = {}, 
+Template.pokerCreate.events({
+  'click #btnCreateRoom': function funcTplCreateRoomClickBtnCreateRoom() {
+    var toInsert = {},
+        getVoteUrl = function (id) {
+          return location.protocol + "//" + location.hostname + (location.port ? ":" + location.port : "") 
+            + location.pathname + "/vote/" + id;
+        },
         id, qrCode, qrCodeElement = document.querySelector('#qrcode');
     if (Meteor.UserId) {
       toInsert.ownerId = Meteor.UserId;
@@ -19,21 +23,16 @@ Template.pokerRoom.events({
     id = Poker.insert(toInsert);
     
     new QRCode(qrCodeElement, {
-      text: location.protocol + "://" + location.host + (location.port ? ":" + location.port : "") 
-        + "/" + location.pathname,
-      width: 256,
-      height: 256,
+      text: getVoteUrl(id),
+      width: 128,
+      height: 128,
       colorDark : "#000000",
       colorLight : "#ffffff",
-      correctLevel : QRCode.CorrectLevel.H
+      correctLevel : QRCode.CorrectLevel.L
     });
     
     document.querySelector('#btnCreateRoom').disabled = 'disabled';
-    document.querySelector('#btnGoToResult').style.visibility = 'visible';
-    document.querySelector('#btnGoToResult').style.display = 'block';
-	},
-  
-  'click #btnGoToRoom': function funcTplRoomRoomClickBtnCreateRoom() {
+    
     Session.set('currentRoom', id);
 	},
   
