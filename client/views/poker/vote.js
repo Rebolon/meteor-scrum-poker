@@ -20,11 +20,13 @@ var resetSelection = function () {
     };
 
 if (Session.get('collectionsReady')) {
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function () {
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function (event) {
+console.log('freeze', event);
     disableSelection();
   });
   
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function () {
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function (event) {
+console.log('freeze', event);
     resetSelection();
     enableSelection();
   });

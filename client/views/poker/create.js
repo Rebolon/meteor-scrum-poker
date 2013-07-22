@@ -53,6 +53,7 @@ Template.pokerCreate.events({
     
     id = Poker.insert(toInsert);
     Session.set('currentRoom', id);
+    Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
 	},
   
   'click #btnResetVote': function () {

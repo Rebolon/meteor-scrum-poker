@@ -74,7 +74,15 @@ Meteor.Router.add({
     }
   },
   
-  '/poker/result': {
+  '/poker/:id': {
+    as: 'pokerRoomCreated',
+    to: 'pokerCreate',
+    and: function funcVote(id) {
+     Session.set('currentRoom', id); 
+    }
+  },
+  
+  '/poker/:id/result': {
     to: 'pokerResult',
 		and: function funcCreateRoomAndWait() {
       // @TODO manque la création du channel pour le user courant
@@ -83,7 +91,7 @@ Meteor.Router.add({
     }
   },
     
-  '/poker/vote/:id': {
+  '/poker/:id/vote': {
     to: 'pokerVote',
     and: function funcVote(id) {
      Session.set('currentRoom', id); 
