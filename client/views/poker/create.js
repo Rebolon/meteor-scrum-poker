@@ -56,10 +56,12 @@ Template.pokerCreate.events({
 	},
   
   'click #btnResetVote': function () {
+console.log('reset', Session.get('currentRoom') + ':currentRoom:reset');
     PokerStream.emit(Session.get('currentRoom') + ':currentRoom:reset');  
   },
   
   'click #btnFreezeVote': function () {
+console.log('freeze', Session.get('currentRoom') + ':currentRoom:freeze');
     PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');  
   }
 });

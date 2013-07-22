@@ -1,5 +1,9 @@
+PokerStream.on('emitEvent', function (message) {
+  console.log(arguments);
+});
+
 PokerStream.permissions.read(function(event) {
-  console.log('PokerStream event received');
+  console.log('PokerStream perm read', event);
   var matched = event.match(/(.*):currentRoom/); // or /(.*):message/ to limit only to message event
     if(matched) {
       return true;
@@ -8,6 +12,10 @@ PokerStream.permissions.read(function(event) {
     }
   }, false); //end false make sure
 
+PokerStream.permissions.write(function(event) {
+  console.log('PokerStream perm write', event);
+  return true;
+  }, false); //end false make sure
 // manage vote/reset/freeze event
 // only master can reset or freeze => on Poker insert is there a way to get a subscriptionId from PokerStream ?
 //     must also check if ownerId from Poker is the same as userId from stream
