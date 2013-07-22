@@ -86,7 +86,6 @@ Meteor.Router.add({
   '/poker/vote/:id': {
     to: 'pokerVote',
     and: function funcVote(id) {
-console.log('/poker/vote/:id');
      Session.set('currentRoom', id); 
     }
   }

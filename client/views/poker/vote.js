@@ -1,15 +1,29 @@
 console.log('client/views/poker/vote.js');
 
-var currentRoom = Session.get('currentRoom'),
-    resetSelection = function () {
+var resetSelection = function () {
       document.querySelectorAll('pokerValue').forEach(function (item) {
         item.selected = "";
+      });
+    },
+    disableSelection = function () {
+      document.querySelectorAll('pokerValue').forEach(function (item) {
+        item.disabled = "disabled";
+      });
+    },
+    enableSelection = function () {
+      document.querySelectorAll('pokerValue').forEach(function (item) {
+        item.disabled = "";
       });
     };
 
 if (Session.get('collectionsReady')) {
-  PokerStream.on(currentRoom + ':freezeVote', function () {
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function () {
+    disableSelection();
+  });
+  
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function () {
     resetSelection();
+    enableSelection();
   });
 }
 
@@ -29,10 +43,11 @@ Template.pokerVote.events({
   
   // maybe btnSendCote is useless and we should emit 
 	'click #btnSendVote': function () {
-    var vote = Session.get('vote');
+    var vote = Session.get('vote'),
+        currentRoom = Session.get('currentRoom');
     if (vote) {
       document.querySelector('#btnSendVote').disabled = disabled;
-      PokerStream.emit(currentRoom + ':vote', vote);
+      PokerStream.emit(currentRoom + ':currentRoom:vote', vote);
       Session.set('vote', null);
     }
 	}
