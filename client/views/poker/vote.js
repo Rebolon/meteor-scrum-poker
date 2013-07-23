@@ -1,28 +1,50 @@
 console.log('client/views/poker/vote.js');
 
 var resetSelection = function () {
-      var list = document.querySelectorAll('pokerValue');
+      var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.selected = "";
       });
+  
+      resetAndSelectSelection();
     },
+    
     disableSelection = function () {
-      var list = document.querySelectorAll('pokerValue');
+      var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.disabled = "disabled";
       });
+      
+      document.querySelector('#btnSendVote').disabled = "disabled";
+      document.querySelector('#btnSendVote').className += " disabled";
     },
+    
     enableSelection = function () {
-      var list = document.querySelectorAll('pokerValue');
+      var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.disabled = "";
+      });
+      
+      resetAndSelectSelection();
+      
+      document.querySelector('#btnSendVote').disabled = "";
+      document.querySelector('#btnSendVote').className = document.querySelector('#btnSendVote').className.replace(/(?:^|\s)disabled(?!\S)/g, "");
+    },
+    
+    resetAndSelectSelection = function (voteValue) {
+      var list = document.querySelectorAll('.pokerValue');
+      _.each(list, function (item) {
+        item.className = item.className.replace(/(?:^|\s)btn-inverse(?!\S)/g, "");
+        if (voteValue
+              && item.value == voteValue)
+          item.className += " btn-inverse";
       });
     };
 
 Meteor.startup(function () {
   
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function (event) {
-console.log('freeze', event);
+console.log('freeze', arguments);
     disableSelection();
   });
     
@@ -53,11 +75,13 @@ Template.pokerVote.events({
 	'click #btnSendVote': function () {
     var vote = Session.get('vote'),
         currentRoom = Session.get('currentRoom');
+    
     if (vote) {
       document.querySelector('#btnSendVote').disabled = "disabled";
       document.querySelector('#btnSendVote').className += " disabled";
+
+      resetAndSelectSelection(vote);
       
-console.log('emit', currentRoom + ':currentRoom:vote');
       PokerStream.emit(currentRoom + ':currentRoom:vote', vote);
       Session.set('vote', null);
     }

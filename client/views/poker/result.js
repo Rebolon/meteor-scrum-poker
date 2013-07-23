@@ -1,7 +1,18 @@
 Meteor.startup(function() {
-  var currentRoom = Session.get('currentRoom');      
+  var currentRoom = Session.get('currentRoom'); 
+  
+  Session.setDefault('displayVoteResult', false);
 
-  PokerStream.on(currentRoom + ':currentRoom:vote', function () {
-    console.log('event vote received', arguments);              
-  });
+});
+
+Template.voteResult.helpers({
+  votes: function () {
+    if (Session.get('displayVoteResult')) {
+      return Vote.find({}, {sort: {value: 1}});
+    }
+  },
+  
+  nbVotes: function () {
+    return Vote.find().count();
+  }
 });

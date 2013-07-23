@@ -8,22 +8,22 @@ var pokerQRCode,
     buildQRCode = function (url) {
       var qrCodeElement = document.querySelector('#qrcode'),
           doQRCode = function () {
-             pokerQRCode = new QRCode(qrCodeElement, {                                                                                                                                                                                                                                                                                                       
-               text: url,                                                                                                                                  
-               width: 128,                                                                                                                                                                    
-               height: 128,                                                                                                                                                                   
-               colorDark : "#000000",                                                                                                                                                         
-               colorLight : "#ffffff",                                                                                                                                                        
-               correctLevel : QRCode.CorrectLevel.L                                                                                                                                           
-             });
-             return pokerQRCode;
-           };
-      if (qrCodeElement.children.length >0
-           && pokerQRCode) {
-        pokerQRCode.clear(); // clear the code.
-      }
+            qrCodeElement.innerHTML = "";
+            
+            pokerQRCode = new QRCode(qrCodeElement, {                                                                                                                                                                                                                                                                                                       
+              text: url,                                                                                                                                  
+              width: 128,                                                                                                                                                                    
+              height: 128,                                                                                                                                                                   
+              colorDark : "#000000",                                                                                                                                                         
+              colorLight : "#ffffff",                                                                                                                                                        
+              correctLevel : QRCode.CorrectLevel.L                                                                                                                                           
+            });
+            return pokerQRCode;
+          },
+          url = location.protocol + '//' + location.host + url;
       
       if (pokerQRCode) {
+         pokerQRCode.clear();
          pokerQRCode.makeCode(url); // make another code.  
       } else {
         if (typeof QRCode != "undefined") {
@@ -35,6 +35,18 @@ var pokerQRCode,
       
       console.log('url', url);
     };
+
+Meteor.startup(function () {
+  
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
+console.log('vote', vote, this);
+    // actually don't update, only one vote accepted, but maybe update is a better idea
+    if (!Vote.find({subscriptionId: this.subscriptionId}).count()) {
+      Vote.insert({value: vote, userId: this.userId, subscriptionId: this.subscriptionId});
+    }
+  });
+
+});
 
 Template.pokerCreate.helpers({
 	isInRoom: function funcTplRoomRoomIsInRoom() {
@@ -64,13 +76,17 @@ Template.pokerCreate.events({
 	},
   
   'click #btnResetVote': function () {
-console.log('reset', Session.get('currentRoom') + ':currentRoom:reset');
     PokerStream.emit(Session.get('currentRoom') + ':currentRoom:reset');  
+    Vote.find({}).forEach(function (item) {
+      Vote.delete({_id: item._id});
+    });
+    Session.set('displayVoteResult', false);
   },
   
+  // @TODO on server side, freeze should block any client try
   'click #btnFreezeVote': function () {
-console.log('freeze', Session.get('currentRoom') + ':currentRoom:freeze');
-    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');  
+    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
+    Session.set('displayVoteResult', true);
   }
 });
 

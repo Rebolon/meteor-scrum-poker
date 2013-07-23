@@ -1,3 +1,13 @@
 <template name="voteResult">
-voteResult
+  <div class="row-fluid">
+    <div class="span2">
+      {{nbVotes}} votes 
+    </div>
+    
+    <div class="span10">
+      {{#each votes}}
+      <button class="btn disabled" disabled="disabled">{{value}}</button>
+      {{/each}}
+    </div>
+  </div>
 </template>
