@@ -1,4 +1,4 @@
-console.log('collections/common.js');
+console.log('collections/poker.js');
 
 if (Meteor.isClient) {
   Poker = new Meteor.Collection(null);

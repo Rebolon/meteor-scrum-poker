@@ -22,15 +22,16 @@ var resetSelection = function () {
 Meteor.startup(function () {
   
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function (event) {
-    console.log('freeze', event);
+console.log('freeze', event);
     disableSelection();
   });
     
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function (event) {
-    console.log('freeze', event);
+console.log('freeze', event);
     resetSelection();
     enableSelection();
   });
+
 });
 
 Template.pokerVote.events({
