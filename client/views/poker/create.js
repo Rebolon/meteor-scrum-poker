@@ -7,7 +7,7 @@ var pokerQRCode,
     
     buildQRCode = function (url) {
       var qrCodeElement = document.querySelector('#qrcode'),
-          buildQRCode = function () {
+          doQRCode = function () {
              pokerQRCode = new QRCode(qrCodeElement, {                                                                                                                                                                                                                                                                                                       
                text: url,                                                                                                                                  
                width: 128,                                                                                                                                                                    
@@ -15,8 +15,9 @@ var pokerQRCode,
                colorDark : "#000000",                                                                                                                                                         
                colorLight : "#ffffff",                                                                                                                                                        
                correctLevel : QRCode.CorrectLevel.L                                                                                                                                           
-           }); 
-          };
+             });
+             return pokerQRCode;
+           };
       if (qrCodeElement.children.length >0
            && pokerQRCode) {
         pokerQRCode.clear(); // clear the code.
@@ -25,10 +26,10 @@ var pokerQRCode,
       if (pokerQRCode) {
          pokerQRCode.makeCode(url); // make another code.  
       } else {
-        if (QRCode !== undefined) {
-          buildQRCode();
+        if (typeof QRCode != "undefined") {
+          doQRCode();
         } else {
-          Meteor.setTimeout(buildQRCode, 1000);
+          Meteor.setTimeout(doQRCode, 1000);
         }
       }
       

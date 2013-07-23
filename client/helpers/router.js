@@ -51,25 +51,25 @@ Meteor.Router.add({
 	/**
 	 * Sprint mood tools
 	 */
-/*	'/sprint/:_id': { // idem meeting... ?
-		to: 'sprintPage',
-                and: function(id) { Session.set('selectedSprint', id); }
-	},
+/*  '/sprint/:_id': { // idem meeting... ?
+      to: 'sprintPage',
+      and: function(id) { Session.set('selectedSprint', id); }
+    },
 */
 	'/sprint/submit': {
-                to: 'sprintSubmit',
-                and: function() { Session.set('selectedSprint', null); }
-        },
+    to: 'sprintSubmit',
+    and: function() { Session.set('selectedSprint', null); }
+  },
 
-        '/sprint/edit/:_id': {
-                to: 'sprintSubmit',
-                and: function(id) { Session.set('selectedSprint', id); }
-        },
+  '/sprint/edit/:_id': {
+    to: 'sprintSubmit',
+    and: function(id) { Session.set('selectedSprint', id); }
+  },
 
 	'/sprint/summary/:_id': {
-                to: 'sprintSummary',
-                and: function(id) { Session.set('selectedSprint', id); }
-        },
+    to: 'sprintSummary',
+    and: function(id) { Session.set('selectedSprint', id); }
+  },
 
   /**
 	 * Poker tools
@@ -89,7 +89,7 @@ Meteor.Router.add({
     to: 'pokerCreate',
     and: function funcVote(id) {
       loadQRCodeScript();
-      
+
       Session.set('currentRoom', id); 
     }
   },
