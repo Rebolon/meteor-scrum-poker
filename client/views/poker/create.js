@@ -2,12 +2,21 @@ Session.setDefault('currentRoom', false);
 
 var pokerQRCode,
     getVoteUrl = function (id) {
-      return location.protocol + "//" + location.hostname + (location.port ? ":" + location.port : "") 
-      + location.pathname + "/vote/" + id;
+      return Meteor.Router.pokerVotePath(id);
     },
     
     buildQRCode = function (url) {
-      var qrCodeElement = document.querySelector('#qrcode');
+      var qrCodeElement = document.querySelector('#qrcode'),
+          buildQRCode = function () {
+             pokerQRCode = new QRCode(qrCodeElement, {                                                                                                                                                                                                                                                                                                       
+               text: url,                                                                                                                                  
+               width: 128,                                                                                                                                                                    
+               height: 128,                                                                                                                                                                   
+               colorDark : "#000000",                                                                                                                                                         
+               colorLight : "#ffffff",                                                                                                                                                        
+               correctLevel : QRCode.CorrectLevel.L                                                                                                                                           
+           }); 
+          };
       if (qrCodeElement.children.length >0
            && pokerQRCode) {
         pokerQRCode.clear(); // clear the code.
@@ -16,14 +25,11 @@ var pokerQRCode,
       if (pokerQRCode) {
          pokerQRCode.makeCode(url); // make another code.  
       } else {
-         pokerQRCode = new QRCode(qrCodeElement, {                                                                                                                                                                                                                                                                                                       
-           text: url,                                                                                                                                  
-           width: 128,                                                                                                                                                                    
-           height: 128,                                                                                                                                                                   
-           colorDark : "#000000",                                                                                                                                                         
-           colorLight : "#ffffff",                                                                                                                                                        
-           correctLevel : QRCode.CorrectLevel.L                                                                                                                                           
-         });
+        if (QRCode !== undefined) {
+          buildQRCode();
+        } else {
+          Meteor.setTimeout(buildQRCode, 1000);
+        }
       }
       
       console.log('url', url);
