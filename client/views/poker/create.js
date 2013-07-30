@@ -75,24 +75,28 @@ Template.pokerCreate.events({
     
     id = Poker.insert(toInsert);
     Session.set('currentRoom', id);
+    Session.get('pokerVoteStatus', 'voting');
+    
     Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
     Vote.find().forEach(function funcResetVote(item) {
-      Vote.delete({_id: item._id});
+      Vote.remove({_id: item._id});
     });
 	},
   
   'click #btnResetVote': function () {
     PokerStream.emit(Session.get('currentRoom') + ':currentRoom:reset');  
     Vote.find({}).forEach(function (item) {
-      Vote.delete({_id: item._id});
+      Vote.remove({_id: item._id});
     });
     Session.set('displayVoteResult', false);
+    Session.get('pokerVoteStatus', 'voting');
   },
   
   // @TODO on server side, freeze should block any client try
   'click #btnFreezeVote': function () {
     PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
     Session.set('displayVoteResult', true);
+    Session.get('pokerVoteStatus', 'freeze');
   }
 });
 

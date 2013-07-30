@@ -1,15 +1,9 @@
 console.log('client/views/poker/vote.js');
 
-var resetSelection = function () {
-      var list = document.querySelectorAll('.pokerValue');
-      _.each(list, function (item) {
-        item.selected = "";
-      });
-  
-      resetAndSelectSelection();
-    },
-    
-    disableSelection = function () {
+Session.setDefault('pokerVoteStatus', 'voting'); // status available : voting, freeze
+
+var disableSelection = function () {
+console.log('disableSelection');
       var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.disabled = "disabled";
@@ -17,9 +11,17 @@ var resetSelection = function () {
       
       document.querySelector('#btnSendVote').disabled = "disabled";
       document.querySelector('#btnSendVote').className += " disabled";
+      
+      Session.get('pokerVoteStatus', 'freeze');
+    },
+    
+    resetSelection = function () {
+console.log('resetSelection');
+      enableSelection();
     },
     
     enableSelection = function () {
+console.log('enableSelection');
       var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.disabled = "";
@@ -32,6 +34,7 @@ var resetSelection = function () {
     },
     
     resetAndSelectSelection = function (voteValue) {
+console.log('resetAndSelectSelection', voteValue); 
       var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.className = item.className.replace(/(?:^|\s)btn-inverse(?!\S)/g, "");
@@ -39,19 +42,20 @@ var resetSelection = function () {
               && item.value == voteValue)
           item.className += " btn-inverse";
       });
+      
+      Session.get('pokerVoteStatus', 'voting');
     };
 
 Meteor.startup(function () {
   
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function (event) {
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function () {
 console.log('freeze', arguments);
     disableSelection();
   });
     
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function (event) {
-console.log('freeze', event);
+  PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function () {
+console.log('freeze', arguments);
     resetSelection();
-    enableSelection();
   });
 
 });
