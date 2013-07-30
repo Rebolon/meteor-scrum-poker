@@ -54,7 +54,7 @@ console.log('freeze', arguments);
   });
     
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function () {
-console.log('freeze', arguments);
+console.log('reset', arguments);
     resetSelection();
   });
 
@@ -62,6 +62,11 @@ console.log('freeze', arguments);
 
 Template.pokerVote.events({
   'click .btn.pokerValue': function (event) {
+console.log('click .btn.pokerValue');
+    if (Session.get('pokerVoteStatus') !== 'voting')
+      return;
+    
+console.log('click .btn.pokerValue', 'continue');
     var vote = event.currentTarget.value;
 
     // reset previous selection if 
@@ -77,6 +82,11 @@ Template.pokerVote.events({
   
   // maybe btnSendCote is useless and we should emit 
 	'click #btnSendVote': function () {
+console.log('click #btnSendVote');
+    if (Session.get('pokerVoteStatus') !== 'voting')
+      return;
+    
+console.log('click #btnSendVote', 'continue');
     var vote = Session.get('vote'),
         currentRoom = Session.get('currentRoom');
     
