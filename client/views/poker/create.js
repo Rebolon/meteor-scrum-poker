@@ -73,6 +73,9 @@ Template.pokerCreate.events({
     id = Poker.insert(toInsert);
     Session.set('currentRoom', id);
     Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
+    Vote.find().forEach(function funcResetVote(item) {
+      Vote.delete({_id: item._id});
+    });
 	},
   
   'click #btnResetVote': function () {
