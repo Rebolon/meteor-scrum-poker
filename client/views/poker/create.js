@@ -41,8 +41,11 @@ Meteor.startup(function () {
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
 console.log('vote', vote, this);
     // actually don't update, only one vote accepted, but maybe update is a better idea
-    if (!Vote.find({subscriptionId: this.subscriptionId}).count()) {
+    var voteFound = Vote.find({subscriptionId: this.subscriptionId});
+    if (!voteFound.count()) {
       Vote.insert({value: vote, userId: this.userId, subscriptionId: this.subscriptionId});
+    } else {
+      Vote.update({_id: voteFound._id}, {$set: {value: vote}});
     }
   });
 
