@@ -99,7 +99,5 @@ console.log('click #btnSendVote', 'continue');
       PokerStream.emit(currentRoom + ':currentRoom:vote', vote);
       Session.set('vote', null);
     }
-    
-    PokerStream.emit('emitEvent', 'test');
 	}
 });

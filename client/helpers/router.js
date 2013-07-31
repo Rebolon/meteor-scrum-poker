@@ -77,6 +77,7 @@ Meteor.Router.add({
   '/poker': {
     to: 'pokerCreate',
     and: function funcGotToCreateRoom() {
+      console.log('router', '/poker'); 
       loadQRCodeScript();
       
       // clear session
@@ -88,6 +89,7 @@ Meteor.Router.add({
     as: 'pokerRoomCreated',
     to: 'pokerCreate',
     and: function funcVote(id) {
+      console.log('router', '/poker/' + id); 
       loadQRCodeScript();
 
       Session.set('currentRoom', id); 
@@ -97,7 +99,9 @@ Meteor.Router.add({
   '/poker/:id/result': {
     to: 'pokerResult',
 		and: function funcCreateRoomAndWait() {
+      console.log('router', '/poker/' + id + '/result'); 
       // @TODO manque la création du channel pour le user courant
+      // @TODO euh je voulais dire quoi ?
 			/*PokerStream.on('vote', function (message) {
 			});*/
     }
@@ -107,7 +111,8 @@ Meteor.Router.add({
     as: 'pokerVote',
     to: 'pokerVote',
     and: function funcVote(id) {
-     Session.set('currentRoom', id); 
+      console.log('router', '/poker/' + id + '/vote'); 
+      Session.set('currentRoom', id); 
     }
   }
 });

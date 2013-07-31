@@ -84,6 +84,9 @@ Template.pokerCreate.events({
     Vote.find().forEach(function funcResetVote(item) {
       Vote.remove({_id: item._id});
     });
+    
+// only for test purpose
+PokerStream.emit(Session.get('currentRoom') + ':currentRoom:created');
 	},
   
   'click #btnResetVote': function () {
