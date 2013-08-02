@@ -38,20 +38,21 @@ var pokerQRCode,
 
 Meteor.startup(function () {
   
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
-console.log('vote', vote, this);
-    var voteFound = 0;
-    // update is now allowed
-    if (Session.get('pokerVoteStatus') === 'voting') {
-      voteFound = Vote.find({subscriptionId: this.subscriptionId});
-      if (!voteFound.count()) {
-        Vote.insert({value: vote, userId: this.userId, subscriptionId: this.subscriptionId});
-      } else {
-        Vote.update({_id: voteFound._id}, {$set: {value: vote}});
+  Deps.autorun(function funcReloadStreamListeningOnNewRoom () {
+    PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
+      var voteFound = 0;
+      // update is now allowed
+      if (Session.get('pokerVoteStatus') === 'voting') {
+        voteFound = Vote.find({subscriptionId: this.subscriptionId});
+        if (!voteFound.count()) {
+          Vote.insert({value: vote, userId: this.userId, subscriptionId: this.subscriptionId});
+        } else {
+          Vote.update({_id: voteFound._id}, {$set: {value: vote}});
+        }
       }
-    }
+    });
   });
-
+  
 });
 
 Template.pokerCreate.helpers({
