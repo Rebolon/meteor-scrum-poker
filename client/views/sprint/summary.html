@@ -1,25 +1,25 @@
 <template name="sprintSummary">
-    {{#with sprint}}
-	{{title}} ({{submitted}})
-	<ul>
-	{{#each members}}
-		<li>{{email}} {{#unless email}}inconnue{{/unless}} </li>
-	{{/each}}
-	</ul>
-	{{#if endTime}}
-	# de participants: {{members.length}}<br />
-		d&eacute;marrage du sprint: {{displayDate startTime}}<br />
-	        fin dsprint: {{displayDate endTime}}<br />
-	{{else}}
-		{{#if startTime}}
-			Sprint en cours<br />
-		{{else}}
-			Sprint non d&eacute;marr&eacute;e<br />
-		{{/if}}
-	{{/if}}
-    {{/with}}
-
-    {{#unless meeting}}
-	Il semble qu'aucun sprint soit s&eacute;lectionn&eacute;
-    {{/unless}}
+  {{#with sprint}}
+  {{title}} ({{submitted}})
+  <ul>
+    {{#each members}}
+    <li>{{email}} {{#unless email}}inconnue{{/unless}} </li>
+    {{/each}}
+  </ul>
+  {{#if endTime}}
+  # de participants: {{members.length}}<br />
+  d&eacute;marrage du sprint: {{displayDate startTime}}<br />
+  fin dsprint: {{displayDate endTime}}<br />
+  {{else}}
+  {{#if startTime}}
+  Sprint en cours<br />
+  {{else}}
+  Sprint non d&eacute;marr&eacute;e<br />
+  {{/if}}
+  {{/if}}
+  {{/with}}
+  
+  {{#unless meeting}}
+  Il semble qu'aucun sprint soit s&eacute;lectionn&eacute;
+  {{/unless}}
 </template>

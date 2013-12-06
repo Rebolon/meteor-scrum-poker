@@ -2,45 +2,61 @@ console.log('client/views/poker/vote.js');
 
 Session.setDefault('pokerVoteStatus', 'voting'); // status available : voting, freeze
 
-var disableSelection = function () {
-console.log('disableSelection');
-      var list = document.querySelectorAll('.pokerValue');
-      _.each(list, function (item) {
+var enableSendButton = function () {
+  var btnSendVoteList = document.querySelectorAll('.btnSendVote');
+  _.each(btnSendVoteList, function (item) {
+    item.disabled = "";
+    item.className = document.querySelector('.btnSendVote').className.replace(/(?:^|\s)disabled(?!\S)/g, "");
+  });
+},  
+    disableSendButton = function () {
+      var btnSendVoteList = document.querySelectorAll('.btnSendVote');
+      _.each(btnSendVoteList, function (item) {
+        item.disabled = "disabled";
+        item.className += " disabled";
+      });
+},  
+    disableSelection = function () {
+      var btnValueList = document.querySelectorAll('.pokerValue');
+      _.each(btnValueList, function (item) {
         item.disabled = "disabled";
       });
       
-      document.querySelector('#btnSendVote').disabled = "disabled";
-      document.querySelector('#btnSendVote').className += " disabled";
+      disableSendButton();
       
       Session.get('pokerVoteStatus', 'freeze');
     },
     
-    resetSelection = function () {
-console.log('resetSelection');
+    resetSelection = function (doResetAndSelect) {
       enableSelection();
+      
+      if (doResetAndSelect) {
+        resetAndSelectSelection();
+      }
     },
     
     enableSelection = function () {
-console.log('enableSelection');
       var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
         item.disabled = "";
       });
       
-      resetAndSelectSelection();
-      
-      document.querySelector('#btnSendVote').disabled = "";
-      document.querySelector('#btnSendVote').className = document.querySelector('#btnSendVote').className.replace(/(?:^|\s)disabled(?!\S)/g, "");
+      enableSendButton();
     },
     
     resetAndSelectSelection = function (voteValue) {
-console.log('resetAndSelectSelection', voteValue); 
       var list = document.querySelectorAll('.pokerValue');
       _.each(list, function (item) {
-        item.className = item.className.replace(/(?:^|\s)btn-inverse(?!\S)/g, "");
+        item.className = item.className.replace(/(?:^|\s)btn-default(?!\S)/g, "");
+        if (item.className.search('btn-primary') === -1) {
+          item.className += " btn-primary";
+        }
+        
         if (voteValue
-              && item.value == voteValue)
-          item.className += " btn-inverse";
+            && item.value == voteValue) {
+          item.className += " btn-default";
+          item.className = item.className.replace(/(?:^|\s)btn-primary(?!\S)/g, "");
+        }
       });
       
       Session.get('pokerVoteStatus', 'voting');
@@ -49,24 +65,20 @@ console.log('resetAndSelectSelection', voteValue);
 Meteor.startup(function () {
   
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function () {
-console.log('freeze', arguments);
     disableSelection();
   });
     
   PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function () {
-console.log('reset', arguments);
-    resetSelection();
+    resetSelection(true);
   });
 
 });
 
 Template.pokerVote.events({
   'click .btn.pokerValue': function (event) {
-console.log('click .btn.pokerValue');
     if (Session.get('pokerVoteStatus') !== 'voting')
       return;
     
-console.log('click .btn.pokerValue', 'continue');
     var vote = event.currentTarget.value;
 
     // reset previous selection if 
@@ -76,24 +88,21 @@ console.log('click .btn.pokerValue', 'continue');
     
     Session.set('vote', vote);
     this.selected = "selected";
-    document.querySelector('#btnSendVote').disabled = "";
-    document.querySelector('#btnSendVote').className = document.querySelector('#btnSendVote').className.replace(/(?:^|\s)disabled(?!\S)/g, "");
+    enableSendButton();
   },
   
   // maybe btnSendCote is useless and we should emit 
-	'click #btnSendVote': function () {
-console.log('click #btnSendVote');
+	'click .btnSendVote': function () {
     if (Session.get('pokerVoteStatus') !== 'voting')
       return;
-    
-console.log('click #btnSendVote', 'continue');
+
     var vote = Session.get('vote'),
         currentRoom = Session.get('currentRoom');
     
     if (vote) {
-      document.querySelector('#btnSendVote').disabled = "disabled";
-      document.querySelector('#btnSendVote').className += " disabled";
-
+      
+      disableSendButton();
+      
       resetAndSelectSelection(vote);
       
       PokerStream.emit(currentRoom + ':currentRoom:vote', vote);

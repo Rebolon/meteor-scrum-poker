@@ -1,7 +1,9 @@
 {
   "packages": {
+    "npm": {},
     "router": {},
     "spin": {},
-    "streams": {}
+    "streams": {},
+    "gravatar": {}
   }
 }

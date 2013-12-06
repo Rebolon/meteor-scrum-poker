@@ -1,19 +1,24 @@
 <template name="header">
-	<div class="navbar navbar-fixed-top">
-	        <div class="navbar-inner">
-		    <div class="container">
-	        	<a class="brand" href="{{dashboardPath}}">Meeting Time Cost</a>
-			<ul class="nav">
-				{{#if currentUser}}
-				<li><a href="{{meetingSubmitPath}}">New meeting</a></li>
-				<!--li><a href="{{sprintSubmitPath}}">New sprint</a></li-->
-				<li><a href="{{pokerCreatePath}}">Poker</a></li>
-				{{/if}}
-			</ul>
-			<ul class="nav pull-right span3">
-				{{loginButtons}}
-			</ul>
-		    </div>
-		</div>
-	</div>
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="nav-collapse">
+        <div class="col-md-offset-1 col-md-4 text-center navbar-brand"><a class="brand" href="{{dashboardPath}}">Meeting Time Cost</a></div>
+        <ul class="nav navbar-nav navbar-right col-md-3" style="margin-top:15px">
+          <li class="dropdown">{{loginButtons align="right"}}</li>
+          <li><div class="collapse navbar-collapse" style="padding-top: 8px;">
+            {{#if gravatar}}
+            <img src="{{gravatar}}" style="width: 35px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;"/>
+            {{/if}}
+            </div></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right col-md-3" >
+          {{#if currentUser}}
+          <li><a href="{{meetingSubmitPath}}">New meeting</a></li>
+          <!--li><a href="{{sprintSubmitPath}}">New sprint</a></li-->
+          <li><a href="{{pokerCreatePath}}">Poker</a></li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+  </div>
 </template>

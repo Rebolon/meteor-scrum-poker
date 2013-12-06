@@ -65,6 +65,16 @@ Template.pokerCreate.rendered = function () {
   var currentRoom = Session.get('currentRoom');
   if (currentRoom) {
     buildQRCode(getVoteUrl(currentRoom));
+    PokerStream.emit('room:create', currentRoom); // in case we arrive here directly after a server restart => re-create the room
+    
+    PokerStream.on(Meteor.userId() + ':room:create:failure', function () {
+      PokerStream.removeListener(Meteor.userId() + ':room:create:failure');
+      $('#wrap .navbar').before('<div class="alert alert-danger"><strong>Error:</strong> something wrong happened, room destroyed</div>');
+      Meteor.setTimeout(function () {
+        $("#wrap .alert").alert('close');
+        Meteor.Router.to('/poker');
+      }, 1000);
+    });
   }
 };
 
@@ -72,22 +82,35 @@ Template.pokerCreate.events({
   'click #btnCreateRoom': function funcTplCreateRoomClickBtnCreateRoom() {
     var toInsert = {},
         id, qrCode, qrCodeElement = document.querySelector('#qrcode');
-    
-    if (Meteor.UserId) {
-      toInsert.ownerId = Meteor.UserId;
+
+    if (Meteor.userId()) {
+      toInsert.ownerId = Meteor.userId();
     }
     
     id = Poker.insert(toInsert);
-    Session.set('currentRoom', id);
-    Session.get('pokerVoteStatus', 'voting');
+    PokerStream.emit('room:create', id);
     
-    Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
-    Vote.find().forEach(function funcResetVote(item) {
-      Vote.remove({_id: item._id});
+    PokerStream.on(Meteor.userId() + ':room:create:success', function () {
+      Session.set('currentRoom', id);
+      Session.get('pokerVoteStatus', 'voting');
+      
+      Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
+      Vote.find().forEach(function funcResetVote(item) {
+        Vote.remove({_id: item._id});
+      });
+      PokerStream.removeListener(Meteor.userId() + ':room:create:success');
+      PokerStream.removeListener(Meteor.userId() + ':room:create:failure');
     });
     
-// only for test purpose
-PokerStream.emit(Session.get('currentRoom') + ':currentRoom:created');
+    PokerStream.on(Meteor.userId() + ':room:create:failure', function () {
+      $('#wrap .navbar').before('<div class="alert alert-danger"><strong>Error:</strong> you need to be logged</div>');
+      Meteor.setTimeout(function () {
+        $("#wrap .alert").alert('close');
+        Meteor.Router.to('/poker');
+      }, 1000);
+      PokerStream.removeListener(Meteor.userId() + ':room:create:success');
+      PokerStream.removeListener(Meteor.userId() + ':room:create:failure');
+    });
 	},
   
   'click #btnResetVote': function () {

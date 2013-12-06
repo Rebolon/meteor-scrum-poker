@@ -1,15 +1,15 @@
 <template name="sprintMemberList">
-	<ul>
-	{{#each member}}
-		{{> sprintMemberItem}}
-	{{/each}}
-	</ul>
-	
-	{{#if selectedSprint}}
-        <button id="btnGotoSummary">Start</button>
-	{{/if}}
-
-	{{#unless selectedSprint}}
-	Create the sprint to continue.
-	{{/unless}}
+  <ul>
+    {{#each member}}
+    {{> sprintMemberItem}}
+    {{/each}}
+  </ul>
+  
+  {{#if selectedSprint}}
+  <button id="btnGotoSummary">Start</button>
+  {{/if}}
+  
+  {{#unless selectedSprint}}
+  Create the sprint to continue.
+  {{/unless}}
 </template>

@@ -1,12 +1,14 @@
 <template name="voteResult">
-  <div class="row-fluid">
-    <div class="span2">
-      {{nbVotes}} votes 
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-info nbVoteResult"><strong>{{nbVotes}}</strong> votes </div>
     </div>
-    
-    <div class="span10">
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12">
       {{#each votes}}
-      <button class="btn disabled" disabled="disabled">{{value}}</button>
+      <button class="btn btn-{{getColor}} btn-lg" disabled="disabled">{{value}}</button>
       {{/each}}
     </div>
   </div>

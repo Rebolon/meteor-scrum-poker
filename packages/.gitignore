@@ -1,6 +1,11 @@
-router
-page-js-ie-support
-spin
-observatory
-observatory-apollo
-streams
+/streams
+/router
+/spin
+/page-js-ie-support
+/bootstrap-3
+/HTML5-History-API
+/accounts-ui-bootstrap-3
+/gravatar
+/crypto-md5
+/crypto-base
+/npm

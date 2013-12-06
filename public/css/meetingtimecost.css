@@ -3,6 +3,10 @@ html, body {
     height: 100%;
 }
 
+body {
+  padding-top: 50px;
+}
+
 #wrap {
     min-height: 100%;
     height: auto !important;
@@ -16,4 +20,25 @@ html, body {
 
 #qrcode {
  margin: 15px 15px 15px 15px; 
+}
+
+.nbVoteResult {
+  margin-top: 5px;
+}
+.btn.pokerValue, .btn.btnSendVote {
+  height: 115px;
+  width: 115px;
+  margin-bottom: 5px;
+}
+.btn.pokerValue.btn-lg, .btn.btnSendVote.btn-lg {
+  height: 135px;
+  width: 135px;
+}
+.btn.pokerValue.btn-sm, .btn.btnSendVote.btn-sm {
+  height: 95px;
+  width: 95px;
+}
+.btn.pokerValue.btn-xs, .btn.btnSendVote.btn-xs {
+  height: 75px;
+  width: 75px;
 }

@@ -1,15 +1,20 @@
 <template name="pokerCreate">
-  <div class="row-fluid">
-    <div class="span9">
+  <div class="row">
+    <div class="col-md-9">
     {{#if isInRoom}}
       <button name="btnResetVote" id="btnResetVote" class="btn">Reset vote</button>
       <button name="btnFreezeVote" id="btnFreezeVote" class="btn">Freeze vote</button>
-      {{>voteResult}}
+      
+      <div class="row">
+        <div class="col-md-12">
+          {{>voteResult}}
+        </div>
+      </div>
     {{else}}
       <button name="createRoom" id="btnCreateRoom" class="btn">Create a room</button>
     {{/if}}
     </div>
-    <div class="span3">
+    <div class="col-md-3">
       <div id="qrcode"></div>
     </div>
   </div>
