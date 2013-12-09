@@ -5,6 +5,13 @@ html, body {
 
 body {
   padding-top: 50px;
+  /*background: url('/img/zen-2048.jpg') no-repeat center center fixed;*/
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  color:#fff;
+  background-color:#333;
 }
 
 #wrap {
@@ -25,19 +32,23 @@ body {
 .nbVoteResult {
   margin-top: 5px;
 }
+
 .btn.pokerValue, .btn.btnSendVote {
   height: 115px;
   width: 115px;
   margin-bottom: 5px;
 }
+
 .btn.pokerValue.btn-lg, .btn.btnSendVote.btn-lg {
   height: 135px;
   width: 135px;
 }
+
 .btn.pokerValue.btn-sm, .btn.btnSendVote.btn-sm {
   height: 95px;
   width: 95px;
 }
+
 .btn.pokerValue.btn-xs, .btn.btnSendVote.btn-xs {
   height: 75px;
   width: 75px;

@@ -6,7 +6,9 @@
       "router": {},
       "spin": {},
       "streams": {},
-      "gravatar": {}
+      "gravatar": {},
+      "bootstrap-3": {},
+      "accounts-ui-bootstrap-3": {}
     },
     "packages": {
       "npm": {
@@ -33,6 +35,16 @@
         "git": "https://github.com/tmeasday/meteor-gravatar.git",
         "tag": "v0.0.4",
         "commit": "d1052ff4401725c23fb199c0e0a36e29b926bc22"
+      },
+      "bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-bootstrap-3.git",
+        "tag": "v0.3.7",
+        "commit": "5dd0d142c870647b910be80bc777b96f0dd45e5e"
+      },
+      "accounts-ui-bootstrap-3": {
+        "git": "https://github.com/mangasocial/meteor-accounts-ui-bootstrap-3.git",
+        "tag": "v0.2.4",
+        "commit": "cdbd20eb065310c0cc302bbd5f22e5b2121c769a"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

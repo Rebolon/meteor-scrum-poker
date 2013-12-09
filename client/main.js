@@ -1,8 +1,52 @@
 console.log('client/main.js');
 
+var myScriptLoader = function funcMyScriptLoader(jsEl, callback) {
+  if (window.attachEvent) {
+    // for IE (sometimes it doesn't send loaded event but only complete)
+    jsEl.onreadystatechange = function funcOnReadyStateChange() {
+      if (jsEl.readyState === 'complete') {
+        jsEl.onreadystatechange = "";
+      } else if (jsEl.readyState === 'loaded') {
+        jsEl.onreadystatechange = "";
+      }
+      
+      if (typeof callback === 'function') {
+        callback();
+      }
+    };
+  } else {
+    // most browsers
+    jsEl.onload = function funcOnLoad () {
+      if (typeof callback === 'function') {
+        callback();
+      }
+    };
+  }
+},
+    getRightBackgroundImage = function funcGetRightBackgroundImage() {
+      var availableWidth = [2048, 1600, 1440, 1024, 640],
+          currentWidth = verge.viewportW(),
+          currentImage;
+
+      for (var i = 0; i<availableWidth[i] && availableWidth[i] >= currentWidth ; i++) {
+        currentImage = '/img/zen-' + availableWidth[i] + '.jpg';
+      }
+console.log('url(' + currentImage + ') no-repeat center center fixed;');
+      if (currentImage) {
+        $('body').css('background', 'url(' + currentImage + ')'); // no-repeat center center fixed;');
+      }
+      return currentImage;
+    };
+
+var myElJs = document.createElement('script'),
+    s = document.getElementsByTagName('script')[0];
+    myElJs.type = 'text/javascript';
+    myElJs.async = true;
+    myElJs.src = '/js/verge.min.js';
+    myScriptLoader(myElJs, getRightBackgroundImage);
+    s.parentNode.insertBefore(myElJs, s);
+
 Meteor.startup(function () {
-  Session.setDefault('selectedMeeting', null);
-  Session.setDefault('selectedSprint', null);
   Session.setDefault('currentRoom', null);
   
   (function logRenders () {

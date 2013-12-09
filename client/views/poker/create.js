@@ -39,7 +39,8 @@ var pokerQRCode,
 Meteor.startup(function () {
   
   Deps.autorun(function funcReloadStreamListeningOnNewRoom () {
-    PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
+    PokerStream.on(Session.get('currentRoom') + ':room:vote', function (vote, previous) {
+      console.log('vote received: ', this, meteor.userId());
       var voteFound = 0;
       // update is now allowed
       if (Session.get('pokerVoteStatus') === 'voting') {
@@ -114,7 +115,7 @@ Template.pokerCreate.events({
 	},
   
   'click #btnResetVote': function () {
-    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:reset');  
+    PokerStream.emit('room:reset', Session.get('currentRoom'));  
     Vote.find({}).forEach(function (item) {
       Vote.remove({_id: item._id});
     });
@@ -128,7 +129,7 @@ Template.pokerCreate.events({
   
   // @TODO on server side, freeze should block any client try
   'click #btnFreezeVote': function () {
-    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
+    PokerStream.emit('room:freeze', Session.get('currentRoom'));
 
     this.className += " btn-inverse";
     
