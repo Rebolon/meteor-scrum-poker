@@ -2,9 +2,15 @@
   <div class="row">
     <div class="col-md-9">
     {{#if isInRoom}}
-      <button name="btnResetVote" id="btnResetVote" class="btn">Reset vote</button>
-      <button name="btnFreezeVote" id="btnFreezeVote" class="btn">Freeze vote</button>
-      
+      <div class="row">
+        <div class="col-md-6">
+          <button name="btnResetVote" id="btnResetVote" class="btn">Reset vote</button>
+          <button name="btnFreezeVote" id="btnFreezeVote" class="btn">Freeze vote</button>
+        </div>
+        <div class="col-md-6">
+          <div class="alert alert-info"><strong>{{getRoomStatus}}</strong></div>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-12">
           {{>voteResult}}

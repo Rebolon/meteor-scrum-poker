@@ -31,7 +31,7 @@ var myScriptLoader = function funcMyScriptLoader(jsEl, callback) {
       for (var i = 0; i<availableWidth[i] && availableWidth[i] >= currentWidth ; i++) {
         currentImage = '/img/zen-' + availableWidth[i] + '.jpg';
       }
-console.log('url(' + currentImage + ') no-repeat center center fixed;');
+
       if (currentImage) {
         $('body').css('background', 'url(' + currentImage + ')'); // no-repeat center center fixed;');
       }
@@ -49,7 +49,7 @@ var myElJs = document.createElement('script'),
 Meteor.startup(function () {
   Session.setDefault('currentRoom', null);
   
-  (function logRenders () {
+  /*(function logRenders () {
     _.each(Template, function (template, name) {
       var oldRender = template.rendered;
       var counter = 0;
@@ -59,6 +59,6 @@ Meteor.startup(function () {
         oldRender && oldRender.apply(this, arguments);
       };
     });
-  })();
+  })();*/
 
 });

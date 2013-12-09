@@ -23,8 +23,10 @@ var pokerQRCode,
           url = location.protocol + '//' + location.host + url;
       
       if (pokerQRCode) {
-         pokerQRCode.clear();
-         pokerQRCode.makeCode(url); // make another code.  
+        // because of re-rendering the qrCodeElement stored in pokerQRCode is no more in DOM
+        //pokerQRCode.clear();
+        //pokerQRCode.makeCode(url); // make another code.  
+        doQRCode();
       } else {
         if (typeof QRCode != "undefined") {
           doQRCode();
@@ -39,8 +41,7 @@ var pokerQRCode,
 Meteor.startup(function () {
   
   Deps.autorun(function funcReloadStreamListeningOnNewRoom () {
-    PokerStream.on(Session.get('currentRoom') + ':room:vote', function (vote, previous) {
-      console.log('vote received: ', this, meteor.userId());
+    PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
       var voteFound = 0;
       // update is now allowed
       if (Session.get('pokerVoteStatus') === 'voting') {
@@ -50,6 +51,8 @@ Meteor.startup(function () {
         } else {
           Vote.update({_id: voteFound._id}, {$set: {value: vote}});
         }
+      } else {
+        PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
       }
     });
   });
@@ -77,6 +80,20 @@ Template.pokerCreate.rendered = function () {
       }, 1000);
     });
   }
+};
+
+Template.pokerCreate.getRoomStatus = function() {
+  var roomStatus;
+  
+  switch(Session.get('pokerVoteStatus')) {
+    case 'freeze':
+      roomStatus = 'vote freezed';
+      break;
+    default:
+      roomStatus = 'vote pending';
+  }
+  
+  return roomStatus;
 };
 
 Template.pokerCreate.events({
@@ -115,7 +132,7 @@ Template.pokerCreate.events({
 	},
   
   'click #btnResetVote': function () {
-    PokerStream.emit('room:reset', Session.get('currentRoom'));  
+    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:reset');  
     Vote.find({}).forEach(function (item) {
       Vote.remove({_id: item._id});
     });
@@ -124,17 +141,17 @@ Template.pokerCreate.events({
     freezeBtn.className = freezeBtn.className.replace(/(?:^|\s)btn-inverse(?!\S)/g, "");
     
     Session.set('displayVoteResult', false);
-    Session.get('pokerVoteStatus', 'voting');
+    Session.set('pokerVoteStatus', 'voting');
   },
   
   // @TODO on server side, freeze should block any client try
   'click #btnFreezeVote': function () {
-    PokerStream.emit('room:freeze', Session.get('currentRoom'));
+    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
 
     this.className += " btn-inverse";
     
     Session.set('displayVoteResult', true);
-    Session.get('pokerVoteStatus', 'freeze');
+    Session.set('pokerVoteStatus', 'freeze');
   }
 });
 
