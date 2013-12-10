@@ -1,11 +1,11 @@
 {
   "packages": {
     "npm": {},
-    "router": {},
     "spin": {},
     "streams": {},
     "gravatar": {},
     "bootstrap-3": {},
-    "accounts-ui-bootstrap-3": {}
+    "accounts-ui-bootstrap-3": {},
+    "iron-router": {}
   }
 }

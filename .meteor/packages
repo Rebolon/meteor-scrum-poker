@@ -11,5 +11,5 @@ standard-app-packages
 bootstrap-3
 accounts-ui-bootstrap-3
 gravatar
-router
 streams
+iron-router

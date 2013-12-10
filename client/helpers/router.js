@@ -16,66 +16,81 @@ var loadQRCodeScript = function funcLoadQRCodeScript(callback) {
   s.parentNode.insertBefore(js, s);
 };
 
-Meteor.Router.add({
-  // to dashboard with meetingList and SprintList
-  '/': {
-    to: 'dashboard',
-    and: function funcGoToDashboard() {// clear session
+Router.configure({
+  layoutTemplate: 'layout',
+  loadingTemplate: 'spinner',
+  autoRender: true
+});
+
+Router.map(function () {
+  this.route('dashboard', {
+    path: '/',
+    template: 'dashboard',
+    action : function funcGoToDashboard() {// clear session
+      console.log('action dashboard');
       Session.set('currentRoom', false);
     }
-  },
+  });
   
-  /**
-	 * Poker tools
-	 */
-  '/poker': {
-    to: 'pokerCreate',
-    and: function funcGoToCreateRoom() {
-      console.log('router', '/poker'); 
+  this.route('pokerCreate', {
+    path: '/poker',
+    template: 'pokerCreate',
+    before: [function () {
+      if (Meteor.loggingIn()) {
+        console.log('before loggingin pokerCreate');
+        this.render('spinner');
+        this.stop();
+      }
+      
+      if (!Meteor.user()) {
+        console.log('before user pokerCreate');
+        this.render('accessDenied');
+        this.stop();
+      }
+    }],
+    action : function funcGoToPokerCreate() {
+      console.log('action pokerCreate'); 
       loadQRCodeScript();
       
       // clear session
       Session.set('currentRoom', false);
     }
-  },
+  });
   
-  '/poker/:id': {
-    as: 'pokerRoomCreated',
-    to: 'pokerCreate',
-    and: function funcVote(id) {
-      console.log('router', '/poker/' + id); 
+  this.route('pokerRoomCreated', {
+    path: '/poker/:id',
+    template: 'pokerCreate',
+    before : [function () {
+      console.log('before pokerRoomCreated'); 
+      if (!Meteor.userId()
+          && !Meteor.loggingIn()) {
+        console.log('before not logged pokerRoomCreated', Router.routes['pokerVote'].path({id: this.params.id}));
+        Router.go('pokerVote', {id: this.params.id});
+        this.stop();
+      }
+    }],
+    action : function funcGoToPokerRoomCreated() {
+      console.log('action pokerRoomCreated', '/poker/' + this.params.id);
+      Session.set('currentRoom', this.params.id);
       loadQRCodeScript();
-      
-      Session.set('currentRoom', id); 
     }
-  },
+  });
   
-  '/poker/:id/result': {
-    to: 'pokerResult',
-    and: function funcCreateRoomAndWait() {
-      console.log('router', '/poker/' + id + '/result'); 
+  this.route('pokerResult', {
+    path: '/poker/:id/result',
+    template: 'pokerResult',
+    action : function funcGoToPokerResult() {
+      console.log('action pokerResult', '/poker/' + this.params.id + '/result'); 
     }
-  },
+  });
   
-  '/poker/:id/vote': {
-    as: 'pokerVote',
-    to: 'pokerVote',
-    and: function funcVote(id) {
-      console.log('router', '/poker/' + id + '/vote'); 
-      Session.set('currentRoom', id); 
+  this.route('pokerVote', {
+    path: '/poker/:id/vote',
+    template: 'pokerVote',
+    action : function funcGoToPokerVote() {
+      console.log('action pokerVoteouter', '/poker/' + this.params.id  + '/vote'); 
+      Session.set('currentRoom', id);
     }
-  }
+  });
+  
 });
-
-Meteor.Router.filters({
-  'requireLogin': function funcRouterFilterRequireLogin(page) {
-    if (Meteor.user()) {
-      return page;
-    } else if (Meteor.loggingIn()) {
-      return 'spinner';
-    }
-    return 'accessDenied';
-  }
-});
-
-Meteor.Router.filter('requireLogin', {only: ['pokerCreate']});

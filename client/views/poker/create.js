@@ -2,7 +2,7 @@ Session.setDefault('currentRoom', false);
 
 var pokerQRCode,
     getVoteUrl = function (id) {
-      return Meteor.Router.pokerVotePath(id);
+      return Router.routes['pokerVote'].path({id: id});
     },
     
     buildQRCode = function (url) {
@@ -41,6 +41,10 @@ var pokerQRCode,
 Meteor.startup(function () {
   
   Deps.autorun(function funcReloadStreamListeningOnNewRoom () {
+    PokerStream.on('room:user:disconnected', function (subscriptionId) {
+      console.log('user disconnected', arguments);
+    });
+      
     PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
       var voteFound = 0;
       // update is now allowed
@@ -76,7 +80,7 @@ Template.pokerCreate.rendered = function () {
       $('#wrap .navbar').before('<div class="alert alert-danger"><strong>Error:</strong> something wrong happened, room destroyed</div>');
       Meteor.setTimeout(function () {
         $("#wrap .alert").alert('close');
-        Meteor.Router.to('/poker');
+        Router.go('pokerCreate');
       }, 1000);
     });
   }
@@ -112,7 +116,7 @@ Template.pokerCreate.events({
       Session.set('currentRoom', id);
       Session.get('pokerVoteStatus', 'voting');
       
-      Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
+      Router.go('pokerRoomCreated', {id: id});
       Vote.find().forEach(function funcResetVote(item) {
         Vote.remove({_id: item._id});
       });
@@ -124,7 +128,7 @@ Template.pokerCreate.events({
       $('#wrap .navbar').before('<div class="alert alert-danger"><strong>Error:</strong> you need to be logged</div>');
       Meteor.setTimeout(function () {
         $("#wrap .alert").alert('close');
-        Meteor.Router.to('/poker');
+        Router.go('pokerCreate');
       }, 1000);
       PokerStream.removeListener(Meteor.userId() + ':room:create:success');
       PokerStream.removeListener(Meteor.userId() + ':room:create:failure');
