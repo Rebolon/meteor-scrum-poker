@@ -1,4 +1,5 @@
 <template name="roomInfos">
-  <div class="row">
-  </div>
+  <div class="row">{{#with getCounters}}
+    <div class="alert alert-info">{{room}} rooms created and {{vote}} votes</div>
+    {{/with}}</div>
 </template>

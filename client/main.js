@@ -49,6 +49,11 @@ var myElJs = document.createElement('script'),
 Meteor.startup(function () {
   Session.setDefault('currentRoom', null);
   
+  Deps.autorun(function funcMeteorAutorun() {  
+    Meteor.subscribe("RoomCounter");
+    Meteor.subscribe("VoteCounter");
+  });
+  
   /*(function logRenders () {
     _.each(Template, function (template, name) {
       var oldRender = template.rendered;

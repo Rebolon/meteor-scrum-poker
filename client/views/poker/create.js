@@ -131,7 +131,13 @@ Template.pokerCreate.events({
     
     PokerStream.on(Meteor.userId() + ':room:create:success', function () {
       Session.set('currentRoom', id);
-      Session.get('pokerVoteStatus', 'voting');
+      Session.set('pokerVoteStatus', 'voting');
+      
+      if (!RoomCounter.find().count()) {
+        RoomCounter.insert({room: 1});
+      } else {
+        RoomCounter.update({_id: RoomCounter.findOne()._id}, {$inc: {room: 1}});
+      }
       
       Meteor.Router.to(Meteor.Router.pokerRoomCreatedPath(id));
       Vote.find().forEach(function funcResetVote(item) {
@@ -168,6 +174,12 @@ Template.pokerCreate.events({
   // @TODO on server side, freeze should block any client try
   'click #btnFreezeVote': function () {
     PokerStream.emit(Session.get('currentRoom') + ':room:freeze');
+    
+    if (!RoomCounter.find().count()) {
+      RoomCounter.insert({vote: Vote.find().count()});
+    } else {
+      RoomCounter.update({_id: RoomCounter.findOne()._id}, {$inc: {vote: Vote.find().count()}});
+    }
 
     this.className += " btn-inverse";
     

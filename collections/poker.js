@@ -6,4 +6,19 @@ if (Meteor.isClient) {
 }
 
 RoomCounter = new Meteor.Collection('PokerRoomCounter');
-VoteCounter = new Meteor.Collection('VoteCounter');
+
+RoomCounter.allow({
+  "insert": function (userId, doc) {
+    "use strict";
+    return userId ? true : false;
+  },
+  
+  "update": function (userId, doc, fieldNames, modifier) {
+    var allowedUpdFields = ['room', 'vote'];
+    if (userId
+        && _.intersection(fieldNames, allowedUpdFields).length) {
+      return true;
+    }
+    return false;
+  }
+});
