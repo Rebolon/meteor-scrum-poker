@@ -41,6 +41,13 @@ var pokerQRCode,
 Meteor.startup(function () {
   
   Deps.autorun(function funcReloadStreamListeningOnNewRoom () {
+    PokerStream.on(Session.get('currentRoom') + ':room:user:disconnected', function (subscriptionId) {
+      // remove vote from a disconnected user, only if room is in voting status
+      if (Session.get('pokerVoteStatus') === 'voting') {
+        Vote.remove({subscriptionId: subscriptionId})
+      }
+    });
+    
     PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
       var voteFound = 0;
       // update is now allowed

@@ -21,6 +21,14 @@ var roomList = {},
       }
       
       return true;
+    },
+    listeningToVoteStream = function (roomId) {
+      PokerStream.on(roomId + ':currentRoom:vote', function () {
+        var self = this;
+        this.onDisconnect = function () {
+          PokerStream.emit(roomId + ':room:user:disconnected', self.subscriptionId);
+        };
+      });
     };
 
 console.log('start roomList', roomList);
@@ -28,8 +36,16 @@ console.log('start roomList', roomList);
 PokerStream.permissions.read(function(eventName) {
   console.log('PokerStream perm read', eventName, this);
   
+  if (eventName.match(/(.*):room:user:disconnected/)) {
+    console.log('disconnection', this.subscriptionId, roomList);
+    return true;
+  }
+      
   if (eventName.match(/(.*):currentRoom/)) {
     console.log('PokerStream perm read matched /(.*):currentRoom/');
+    if (eventName.match(/(.*):currentRoom:vote/)) {
+      listeningToVoteStream(_.first(eventName.split(':')));
+    }
     return true;
   }
   
