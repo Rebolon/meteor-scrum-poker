@@ -24,12 +24,12 @@ var myScriptLoader = function funcMyScriptLoader(jsEl, callback) {
   }
 },
     getRightBackgroundImage = function funcGetRightBackgroundImage() {
-      var availableWidth = [2048, 1600, 1440, 1024, 640],
+      var availableWidth = [2048, 1600, 1400, 1024, 800, 640],
           currentWidth = verge.viewportW(),
           currentImage;
 
       for (var i = 0; i<availableWidth[i] && availableWidth[i] >= currentWidth ; i++) {
-        currentImage = '/img/zen-' + availableWidth[i] + '.jpg';
+        currentImage = '/img/zen/' + availableWidth[i] + '.jpg';
       }
 
       if (currentImage) {
