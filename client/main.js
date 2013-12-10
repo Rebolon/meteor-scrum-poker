@@ -33,7 +33,7 @@ var myScriptLoader = function funcMyScriptLoader(jsEl, callback) {
       }
 
       if (currentImage) {
-        $('body').css('background', 'url(' + currentImage + ')'); // no-repeat center center fixed;');
+        $('body').css('background', 'url(' + currentImage + ')  no-repeat center center fixed grey'); // no-repeat center center fixed;');
       }
       return currentImage;
     };
