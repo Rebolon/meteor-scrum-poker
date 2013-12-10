@@ -24,7 +24,7 @@ var enableSendButton = function () {
       
       disableSendButton();
       
-      Session.get('pokerVoteStatus', 'freeze');
+      Session.set('pokerVoteStatus', 'freeze');
     },
     
     resetSelection = function (doResetAndSelect) {
@@ -32,6 +32,8 @@ var enableSendButton = function () {
       
       if (doResetAndSelect) {
         resetAndSelectSelection();
+        
+        Session.set('pokerVoteStatus', 'voting');
       }
     },
     
@@ -64,11 +66,11 @@ var enableSendButton = function () {
 
 Meteor.startup(function () {
   
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:freeze', function () {
+  PokerStream.on(Session.get('currentRoom') + ':room:freeze', function () {
     disableSelection();
   });
     
-  PokerStream.on(Session.get('currentRoom') + ':currentRoom:reset', function () {
+  PokerStream.on(Session.get('currentRoom') + ':room:reset', function () {
     resetSelection(true);
   });
 
@@ -105,7 +107,7 @@ Template.pokerVote.events({
       
       resetAndSelectSelection(vote);
       
-      PokerStream.emit(currentRoom + ':currentRoom:vote', vote);
+      PokerStream.emit(currentRoom + ':room:vote', vote);
       Session.set('vote', null);
     }
 	}

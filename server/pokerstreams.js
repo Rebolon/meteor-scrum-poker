@@ -23,7 +23,7 @@ var roomList = {},
       return true;
     },
     listeningToVoteStream = function (roomId) {
-      PokerStream.on(roomId + ':currentRoom:vote', function () {
+      PokerStream.on(roomId + ':room:vote', function () {
         var self = this;
         this.onDisconnect = function () {
           PokerStream.emit(roomId + ':room:user:disconnected', self.subscriptionId);
@@ -31,64 +31,124 @@ var roomList = {},
       });
     };
 
+var onRoomFreeze = function (roomId) {
+  PokerStream.on('room:freeze', function (roomId) {
+    var self = this;
+    
+    self.onDisconnect = function() {
+      delete roomList[roomId];
+    };
+    
+    if (!self.userId) {
+      return;
+    }
+    
+    if (!roomList[roomId]) {
+      return;
+    }
+    
+    if (roomList[roomId]
+        && roomList[roomId].ownerId === self.userId) {
+      roomList[roomId].status = "freeze";
+      return;
+    }
+  });
+};
+
+var onRoomReset = function () {
+  PokerStream.on('room:reset', function (roomId) {
+    var self = this;
+    
+    self.onDisconnect = function() {
+      delete roomList[roomId];
+    };
+    
+    if (!self.userId) {
+      return;
+    }
+    
+    if (!roomList[roomId]) {
+      return;
+    }
+    
+    if (roomList[roomId]
+        && roomList[roomId].ownerId === self.userId) {
+      roomList[roomId].status = "voting";
+      return;
+    }
+  });
+};
+
 console.log('start roomList', roomList);
 
 PokerStream.permissions.read(function(eventName) {
-  console.log('PokerStream perm read', eventName, this);
-  
+  console.log('PokerStream perm read', eventName, this.subscriptionId, this.userId);
+
   if (eventName.match(/(.*):room:user:disconnected/)) {
-    console.log('disconnection', this.subscriptionId, roomList);
+    //console.log('disconnection', _.first(eventName.split(':')), this.subscriptionId, roomList);
+    return true;
+  }
+  
+  if (eventName.match(/(.*):room:create:(success|failure)/)) {
+    //console.log('PokerStream perm read /room:create/');
+    return _.first(eventName.split(':')) == this.userId ? true : false;
+  }
+
+  if (eventName.match(/(.*):room:vote/)) {
+    //console.log('PokerStream perm read matched /(.*):room:vote/');
+    if (roomList[_.first(eventName.split(':'))].ownerId != this.userId
+       || roomList[_.first(eventName.split(':'))].status != "voting") {
+      return false;
+    }
+    
+    listeningToVoteStream(_.first(eventName.split(':')));
     return true;
   }
       
-  if (eventName.match(/(.*):currentRoom/)) {
-    console.log('PokerStream perm read matched /(.*):currentRoom/');
-    if (eventName.match(/(.*):currentRoom:vote/)) {
-      listeningToVoteStream(_.first(eventName.split(':')));
-    }
+  if (eventName.match(/(.*):room/)) {
+    //console.log('PokerStream perm read matched /(.*):room/');
     return true;
   }
   
-  if (eventName.match(/(.*):room:create/)) {
-    var isOwner = _.first(eventName.split(':')) === this.userId + "" ? true : false; // use + "" to force null to "null"
-    console.log('PokerStream perm read /(.*):room:create/', isOwner);
-    return isOwner ? true : false;
+  if (eventName.match(/room:create/)) {
+    //console.log('PokerStream perm read /room:create/');
+    return false;
   }
 
-  console.log('PokerStream perm read failed');
+  //console.log('PokerStream perm read failed');
   return false;
 });
 
 PokerStream.permissions.write(function(eventName) {
-  console.log('PokerStream perm write:', eventName, this, roomList);
-  
-  /**
-   * n'importe qui peut accéder à une salle (normalement que pour voter
-   */
-  if (eventName.match(/(.*):currentRoom/)) {
-    console.log('PokerStream perm write matched /(.*):currentRoom/');
-    return true;
-  } 
+  console.log('PokerStream perm write:', eventName, this.subscriptionId, this.userId);
   
   /**
    * seul els utilisateurs authentifiés peuvent créé une salle
    */
   if (eventName.match(/room:create/)) {
-    console.log('PokerStream perm write matched /room:create/', this.userId);
+    //console.log('PokerStream perm write matched /room:create/', this.userId);
     return this.userId ? true : false;
   }
   
   /**
-   * seul le créateur de la salle peut 
+   * seul els utilisateurs authentifiés peuvent créé une salle
    */
-  if (eventName.match(/(.*):room:create/)) {
-    var isOwner = _.first(eventName.split(':')) === this.userId 
-      && roomList[this.subscriptionId].ownerId ? true : false;
-    console.log('PokerStream perm write /(.*):room:create/', isOwner);
-    return isOwner ? true : false;
+  if (eventName.match(/(.*):room:(freeze|reset)/)) {
+    //console.log('PokerStream perm write matched /(.*):room:(freeze|reset)/', this.userId);
+    //onRoomFreeze(_.first(eventName.split(':')));
+    //onRoomReset(_.first(eventName.split(':')));
+    return this.userId ? true : false;
+  }
+  
+  /**
+   * n'importe qui peut accéder à une salle (normalement que pour voter
+   */
+  if (eventName.match(/(.*):room:vote/)) {
+    //console.log('PokerStream perm write matched /(.*):room:vote/');
+    return roomList[_.first(eventName.split(':'))].status == "voting" ? true : false;
   }
 
-  console.log('PokerStream perm write failed');
+  //console.log('PokerStream perm write failed');
   return false;  
 });
 
@@ -96,20 +156,21 @@ PokerStream.on('room:create', function (roomId) {
   var self = this,
       found,
       roomInfo = {ownerId: self.userId, 
-                  subscriptionId: self.subscriptionId};
+                  subscriptionId: self.subscriptionId,
+                  status: "voting"};
   
   self.onDisconnect = function() {
-    delete roomList[this.subscriptionId];
+    delete roomList[roomId];// this.subscriptionId];
   };
   
   if (!self.userId) {
-    console.log(self.userId + ':room:create:failure');
+    //console.log(self.userId + ':room:create:failure');
     PokerStream.emit(self.userId + ':room:create:failure'); // self.userId = undefined ici
     return;
   }
   
   if (!roomList[roomId]) {
-    console.log(self.userId + ':room:create:success');
+    //console.log(self.userId + ':room:create:success');
     PokerStream.emit(self.userId + ':room:create:success');
     roomList[roomId] = roomInfo;
     return;
@@ -117,16 +178,15 @@ PokerStream.on('room:create', function (roomId) {
   
   if (roomList[roomId]
      && roomList[roomId].ownerId === self.userId) {
-    console.log(self.userId + ':room:create:success');
+    //console.log(self.userId + ':room:create:success');
     PokerStream.emit(self.userId + ':room:create:success');
     roomList[roomId].subscriptionId = self.subscriptionId;
     return;
   }
   
-  console.log(self.userId + ':room:create:failure');
+  //console.log(self.userId + ':room:create:failure');
   PokerStream.emit(self.userId + ':room:create:failure');
 });
-
 
 // manage vote/reset/freeze event
 // only master can reset or freeze => on Poker insert is there a way to get a subscriptionId from PokerStream ?

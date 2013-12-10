@@ -35,7 +35,7 @@ var pokerQRCode,
         }
       }
       
-      console.log('url', url);
+      console.log('room vote url', url);
     };
 
 Meteor.startup(function () {
@@ -48,18 +48,18 @@ Meteor.startup(function () {
       }
     });
     
-    PokerStream.on(Session.get('currentRoom') + ':currentRoom:vote', function (vote) {
+    PokerStream.on(Session.get('currentRoom') + ':room:vote', function (vote) {
       var voteFound = 0;
       // update is now allowed
       if (Session.get('pokerVoteStatus') === 'voting') {
-        voteFound = Vote.find({subscriptionId: this.subscriptionId});
-        if (!voteFound.count()) {
+        voteFound = Vote.findOne({subscriptionId: this.subscriptionId});
+        if (!voteFound) {
           Vote.insert({value: vote, userId: this.userId, subscriptionId: this.subscriptionId});
         } else {
           Vote.update({_id: voteFound._id}, {$set: {value: vote}});
         }
       } else {
-        PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
+        PokerStream.emit(Session.get('currentRoom') + ':room:freeze');
       }
     });
   });
@@ -94,13 +94,27 @@ Template.pokerCreate.getRoomStatus = function() {
   
   switch(Session.get('pokerVoteStatus')) {
     case 'freeze':
-      roomStatus = 'vote freezed';
+      roomStatus = 'Vote freezed';
       break;
     default:
-      roomStatus = 'vote pending';
+      roomStatus = 'Vote pending';
+  }
+
+  return roomStatus;
+};
+ // @TODO how to mutualize with getRoomStatus using params ?
+Template.pokerCreate.getRoomStatusClass = function() {
+  var className;
+  
+  switch(Session.get('pokerVoteStatus')) {
+    case 'freeze':
+      className = 'warning';
+      break;
+    default:
+      className = 'info';
   }
   
-  return roomStatus;
+  return className;
 };
 
 Template.pokerCreate.events({
@@ -139,7 +153,7 @@ Template.pokerCreate.events({
 	},
   
   'click #btnResetVote': function () {
-    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:reset');  
+    PokerStream.emit(Session.get('currentRoom') + ':room:reset');  
     Vote.find({}).forEach(function (item) {
       Vote.remove({_id: item._id});
     });
@@ -153,7 +167,7 @@ Template.pokerCreate.events({
   
   // @TODO on server side, freeze should block any client try
   'click #btnFreezeVote': function () {
-    PokerStream.emit(Session.get('currentRoom') + ':currentRoom:freeze');
+    PokerStream.emit(Session.get('currentRoom') + ':room:freeze');
 
     this.className += " btn-inverse";
     
