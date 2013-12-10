@@ -75,7 +75,16 @@ Meteor.Router.filters({
       return 'spinner';
     }
     return 'accessDenied';
+  },
+  
+  'reRouteToVote': function (page) {
+    if (!Meteor.user()
+        && !Meteor.loggingIn()) {
+      return 'pokerVote';
+    }
+    return page;
   }
 });
 
+Meteor.Router.filter('reRouteToVote', {only: ['pokerCreate']});
 Meteor.Router.filter('requireLogin', {only: ['pokerCreate']});
