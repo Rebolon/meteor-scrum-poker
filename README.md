@@ -29,3 +29,5 @@ List of autorisations :
 * read : userId + :room:create:success : par celui qui écoute
 
 Help is welcome and new Contributor to the project would be great !
+
+It's available on http://scrumpoker.meteor.com/
