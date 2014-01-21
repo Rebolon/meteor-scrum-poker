@@ -17,7 +17,12 @@
         </div>
       </div>
     {{else}}
+      {{#if currentUser}}
       <button name="createRoom" id="btnCreateRoom" class="btn">Create a room</button>
+      {{/if}}
+      {{#unless currentUser}}
+        Please login or register to app to be able to enjoy the app!
+      {{/unless}}
     {{/if}}
     </div>
     <div class="col-md-3">
