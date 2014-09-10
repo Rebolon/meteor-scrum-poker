@@ -1,21 +1,3 @@
-var loadQRCodeScript = function funcLoadQRCodeScript(callback) {
-  var js, s;
-  
-  // load required script
-  js = document.createElement('script');
-  js.type = 'text/javascript';
-  js.async = true;
-  js.src = 'https://raw.github.com/davidshimjs/qrcodejs/master/qrcode.min.js';
-  
-  // @TODO finish that part to be compatible with IE, FF, Chrome, Opera and mobile
-  if (callback) {
-    js.onload = callback;
-  }
-  
-  s = document.getElementsByTagName('script')[0];
-  s.parentNode.insertBefore(js, s);
-};
-
 Meteor.Router.add({
   // to dashboard with meetingList and SprintList
   '/': {
@@ -32,7 +14,7 @@ Meteor.Router.add({
     to: 'pokerCreate',
     and: function funcGoToCreateRoom() {
       console.log('router', '/poker'); 
-      loadQRCodeScript();
+      Rebolon.ScriptLoader.build('https://raw.github.com/davidshimjs/qrcodejs/master/qrcode.min.js');
       
       // clear session
       Session.set('currentRoom', false);

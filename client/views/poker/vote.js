@@ -62,6 +62,10 @@ var enableSendButton = function () {
       });
       
       Session.get('pokerVoteStatus', 'voting');
+    },
+    
+    closeRoom = function () {
+       Session.set('closed', true); 
     };
 
 Meteor.startup(function () {
@@ -72,6 +76,10 @@ Meteor.startup(function () {
     
   PokerStream.on(Session.get('currentRoom') + ':room:reset', function () {
     resetSelection(true);
+  });
+  
+  PokerStream.on(Session.get('currentRoom') + 'room:delete', function () {
+    closeRoom();
   });
 
 });

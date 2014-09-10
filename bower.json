@@ -1,0 +1,8 @@
+{
+  "name": "scrum-poker",
+  "version": "1.0.0",
+  "dependencies": {
+    "qrcodejs": "https://github.com/davidshimjs/qrcodejs.git",
+    "verge": "https://github.com/ryanve/verge.git"
+  }
+}
