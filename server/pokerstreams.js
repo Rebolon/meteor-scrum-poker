@@ -190,6 +190,7 @@ PokerStream.on('room:create', function (roomId) {
                   status: "voting"};
   
   self.onDisconnect = function() {
+    console.log("room:create disconnection of user");
     delete roomList[roomId];// this.subscriptionId];
     PokerStream.emit(roomId + ':room:delete');
   };

@@ -14,7 +14,7 @@ Meteor.Router.add({
     to: 'pokerCreate',
     and: function funcGoToCreateRoom() {
       console.log('router', '/poker'); 
-      Rebolon.ScriptLoader.build('https://raw.github.com/davidshimjs/qrcodejs/master/qrcode.min.js');
+      Rebolon.ScriptLoader.build('/js/qrcode.min.js');
       
       // clear session
       Session.set('currentRoom', false);
@@ -26,7 +26,7 @@ Meteor.Router.add({
     to: 'pokerCreate',
     and: function funcVote(id) {
       console.log('router', '/poker/' + id); 
-      loadQRCodeScript();
+      Rebolon.ScriptLoader.build('/js/qrcode.min.js');
       
       Session.set('currentRoom', id); 
     }
