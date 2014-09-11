@@ -1,29 +1,6 @@
 console.log('client/main.js');
 
-var myScriptLoader = function funcMyScriptLoader(jsEl, callback) {
-  if (window.attachEvent) {
-    // for IE (sometimes it doesn't send loaded event but only complete)
-    jsEl.onreadystatechange = function funcOnReadyStateChange() {
-      if (jsEl.readyState === 'complete') {
-        jsEl.onreadystatechange = "";
-      } else if (jsEl.readyState === 'loaded') {
-        jsEl.onreadystatechange = "";
-      }
-      
-      if (typeof callback === 'function') {
-        callback();
-      }
-    };
-  } else {
-    // most browsers
-    jsEl.onload = function funcOnLoad () {
-      if (typeof callback === 'function') {
-        callback();
-      }
-    };
-  }
-},
-    getRightBackgroundImage = function funcGetRightBackgroundImage() {
+var getRightBackgroundImage = function funcGetRightBackgroundImage() {
       var availableWidth = [2048, 1600, 1400, 1024, 800, 640],
           currentWidth = verge.viewportW(),
           currentImage;
@@ -38,16 +15,11 @@ var myScriptLoader = function funcMyScriptLoader(jsEl, callback) {
       return currentImage;
     };
 
-var myElJs = document.createElement('script'),
-    s = document.getElementsByTagName('script')[0];
-    myElJs.type = 'text/javascript';
-    myElJs.async = true;
-    myElJs.src = '/js/verge.min.js';
-    myScriptLoader(myElJs, getRightBackgroundImage);
-    s.parentNode.insertBefore(myElJs, s);
+Rebolon.ScriptLoader.build('/js/verge.min.js', getRightBackgroundImage);
 
 Meteor.startup(function () {
   Session.setDefault('currentRoom', null);
+  Session.setDefault('closed', false);
   
   Deps.autorun(function funcMeteorAutorun() {  
     Meteor.subscribe("RoomCounter");

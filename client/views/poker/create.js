@@ -79,6 +79,11 @@ Template.pokerCreate.rendered = function () {
     PokerStream.emit('room:create', currentRoom); // in case we arrive here directly after a server restart => re-create the room
     
     PokerStream.on(Meteor.userId() + ':room:create:failure', function () {
+      if (!Meteor.call('isRoomOwner', currentRoom)) {
+        Meteor.Router.to('/poker');
+        return;
+      }
+      
       PokerStream.removeListener(Meteor.userId() + ':room:create:failure');
       $('#wrap .navbar').before('<div class="alert alert-danger"><strong>Error:</strong> something wrong happened, room destroyed</div>');
       Meteor.setTimeout(function () {

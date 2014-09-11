@@ -62,6 +62,10 @@ var enableSendButton = function () {
       });
       
       Session.get('pokerVoteStatus', 'voting');
+    },
+    
+    closeRoom = function () {
+       Session.set('closed', true); 
     };
 
 Meteor.startup(function () {
@@ -72,6 +76,11 @@ Meteor.startup(function () {
     
   PokerStream.on(Session.get('currentRoom') + ':room:reset', function () {
     resetSelection(true);
+  });
+  
+  PokerStream.on(Session.get('currentRoom') + 'room:delete', function () {
+    console.log("close room: " + Session.get('currentRoom') + 'room:delete');
+    closeRoom();
   });
 
 });
@@ -111,4 +120,10 @@ Template.pokerVote.events({
       Session.set('vote', null);
     }
 	}
+});
+
+Template.pokerVote.helpers({
+  "isRoomOpened": function funcTplPokerVoteHelperIsRoomOpened() {
+    return !Session.get('closed');
+  }
 });

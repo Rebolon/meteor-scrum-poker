@@ -81,6 +81,19 @@ var onRoomReset = function () {
 
 console.log('start roomList', roomList);
 
+Meteor.methods({
+  "isRoomOwner": function funcIsRoomOwner(roomId) {
+    var isOwner = false;
+    
+    if (roomList[roomId]
+       && roomList[roomId].ownerId === this.userId) {
+      isOwner = true;
+    }
+    
+    return isOwner;
+  }
+})
+  
 PokerStream.permissions.read(function(eventName) {
   console.log('PokerStream perm read', eventName, this.subscriptionId, this.userId);
 
@@ -104,7 +117,12 @@ PokerStream.permissions.read(function(eventName) {
     listeningToVoteStream(_.first(eventName.split(':')));
     return true;
   }
-      
+    
+  if (eventName.match(/(.*):room:delete/)) {
+    //console.log('PokerStream perm write matched /room:delete/', this.userId);
+    return false;
+  }
+  
   if (eventName.match(/(.*):room/)) {
     //console.log('PokerStream perm read matched /(.*):room/');
     return true;
@@ -123,11 +141,23 @@ PokerStream.permissions.write(function(eventName) {
   console.log('PokerStream perm write:', eventName, this.subscriptionId, this.userId);
   
   /**
-   * seul els utilisateurs authentifiés peuvent créé une salle
+   * seul els utilisateurs authentifiés peuvent créer ou supprimer une salle
    */
   if (eventName.match(/room:create/)) {
     //console.log('PokerStream perm write matched /room:create/', this.userId);
     return this.userId ? true : false;
+  }
+  
+  /**
+   * qd delete est envoyé, roomList[roomId] n'existe déjà plus => on laisse tout passer (même si un 
+   * utilisateur pourrait ainsi spammer Streams, mais dans ce cas on pourrait envisager un mécanisme 
+   * de blocage : pas plus de 1 delete par minute par exemple car fonctionnellement au delà ça 
+   * n'aurait aucun sens)
+   * @TODO en mettant false en permission read l'event ne sera alors plus spammable ?
+   */
+  if (eventName.match(/(.*):room:delete/)) {
+    //console.log('PokerStream perm write matched /room:delete/', this.userId);
+    return this.userId && !roomList[_.first(eventName.split(':'))]? true : false;
   }
   
   /**
@@ -160,7 +190,9 @@ PokerStream.on('room:create', function (roomId) {
                   status: "voting"};
   
   self.onDisconnect = function() {
+    console.log("room:create disconnection of user");
     delete roomList[roomId];// this.subscriptionId];
+    PokerStream.emit(roomId + ':room:delete');
   };
   
   if (!self.userId) {
